@@ -1,0 +1,9 @@
+{
+  "name": "linguafix",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/linguafix/src",
+  "projectType": "application",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project linguafix --web",
+  "targets": {}
+}
