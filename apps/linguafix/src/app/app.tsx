@@ -1,12 +1,12 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import styles from './app.module.css';
+import {GenericComponents} from "@gind-ia-platform/generic-components"
 
-import NxWelcome from './nx-welcome';
 
 export function App() {
   return (
     <div>
-      <NxWelcome title="linguafix" />
+      <GenericComponents></GenericComponents>
     </div>
   );
 }
