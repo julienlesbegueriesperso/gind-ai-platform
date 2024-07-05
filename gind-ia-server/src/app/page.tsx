@@ -1,27 +1,8 @@
 'use client'
-import { GenericComponents, SignedContent, SigninIndex } from '@gind-ia-platform/generic-components';
+import { GenericComponents, SignedContent } from '@gind-ia-platform/generic-components';
 import styles from './page.module.css';
-import { SessionProvider, useSession } from "next-auth/react"
 
-
-//  const SigninIndex= ()  => {
-//   const { data: session } = useSession()
-//   if (session) {
-//     return (
-//       <>
-//         Signed in as {session.user?.email} <br />
-//         <button onClick={() => signOut()}>Sign out</button>
-//         <GenericComponents></GenericComponents>
-//       </>
-//     )
-//   }
-//   return (
-//     <>
-//       Not signed in <br />
-//       <button onClick={() => signIn()}>Sign in</button>
-//     </>
-//   )
-// }
+import Link from 'next/link';
 
 
   export default function Index() {
@@ -32,11 +13,13 @@ import { SessionProvider, useSession } from "next-auth/react"
             <div>
             <SignedContent publicContent={<p>public content</p>}><>
               <GenericComponents></GenericComponents>
+              <h4>Link to <Link href="/linguafix-server">linguifix</Link></h4>
               </>
             </SignedContent>
 
             </div>
     )
+
 
 
   }

@@ -2,6 +2,7 @@
 import { addUser, GenericComponents, getUsers, SignedContent, UserDocument } from '@gind-ia-platform/generic-components';
 import styles from './page.module.css';
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 
 export default function LinguafixServer() {
@@ -43,6 +44,7 @@ export default function LinguafixServer() {
     <SignedContent publicContent={<h3>Public</h3>}>
     <div className={styles['container']}>
       <GenericComponents></GenericComponents>
+      <h4>Link to <Link href="/">Home</Link></h4>
       <ul>
         {users && users.map((u,i) => <li key={i+""}>{u.email}</li>)}
       </ul>
