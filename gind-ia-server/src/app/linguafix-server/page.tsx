@@ -1,5 +1,5 @@
 'use client'
-import { addUser, GenericComponents, getUsers, UserDocument } from '@gind-ia-platform/generic-components';
+import { addUser, GenericComponents, getUsers, SignedContent, UserDocument } from '@gind-ia-platform/generic-components';
 import styles from './page.module.css';
 import { useEffect, useState } from 'react';
 
@@ -37,6 +37,7 @@ export default function LinguafixServer() {
   }
 
   return (
+    <SignedContent>
     <div className={styles['container']}>
       <GenericComponents></GenericComponents>
       <ul>
@@ -44,5 +45,6 @@ export default function LinguafixServer() {
       </ul>
       <button onClick={() => createNewUser("juju")}>Add</button>
     </div>
+    </SignedContent>
   );
 }

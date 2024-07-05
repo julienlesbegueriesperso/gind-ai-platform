@@ -8,8 +8,9 @@ export const connectDB = async () => {
   try {
     const { connection } = await mongoose.connect(MONGODB_URI as string);
     if (connection.readyState === 1) {
-      return Promise.resolve(true);
+      return Promise.resolve(connection);
     }
+
   } catch (error) {
     console.error(error);
     return Promise.reject(error);
@@ -18,17 +19,23 @@ export const connectDB = async () => {
 
 
 export async function getUsers() {
-  await connectDB();
-  let users = await User.find<UserDocument>();
-  users = [...users.map(u => JSON.parse(JSON.stringify(u)))]
+  const connection = await connectDB();
+  let users;
+  if (connection) {
+    users = await User.find<UserDocument>();
+    users = [...users.map(u => JSON.parse(JSON.stringify(u)))]
+    connection.close()
+  }
   return users;
 }
 
 export async function addUser(newUser:UserDocument) {
-  await connectDB();
-  const added = await User.insertMany([newUser])
-  console.log(added)
-  return
+  const connection = await connectDB();
+  if (connection) {
+    const added = await User.insertMany([newUser])
+    console.log(added)
+    connection.close()
+  }
 }
 
 
