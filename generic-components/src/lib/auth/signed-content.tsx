@@ -4,12 +4,13 @@ import SigninIndex from "./signin-index";
 
 export interface SignedContentProps {
   children: React.ReactNode
+  publicContent: React.ReactNode
 }
 
 export function SignedContent(props:SignedContentProps) {
   return (
     <SessionProvider>
-      <SigninIndex>
+      <SigninIndex publicContent={props.publicContent}>
         {props.children}
       </SigninIndex>
     </SessionProvider>

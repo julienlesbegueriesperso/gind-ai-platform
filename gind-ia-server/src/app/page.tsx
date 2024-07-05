@@ -1,7 +1,7 @@
 'use client'
 import { GenericComponents, SignedContent, SigninIndex } from '@gind-ia-platform/generic-components';
 import styles from './page.module.css';
-import { SessionProvider } from "next-auth/react"
+import { SessionProvider, useSession } from "next-auth/react"
 
 
 //  const SigninIndex= ()  => {
@@ -25,12 +25,16 @@ import { SessionProvider } from "next-auth/react"
 
 
   export default function Index() {
+
+
+
     return (
             <div>
-            <SignedContent>
-            <GenericComponents></GenericComponents>
+            <SignedContent publicContent={<p>public content</p>}><>
+              <GenericComponents></GenericComponents>
+              </>
             </SignedContent>
-            <p>public content</p>
+
             </div>
     )
 

@@ -2,6 +2,7 @@ import NextAuth from "next-auth"
 import KeycloakProvider from "next-auth/providers/keycloak";
 
 const handler = NextAuth({
+  secret: "KAZvWlw9HWbY6y8N1EE/iacgH8Z0zND2nIcaplJQW2s=",
   providers: [
     KeycloakProvider({
       clientId: process.env.KEYCLOAK_ID||"",

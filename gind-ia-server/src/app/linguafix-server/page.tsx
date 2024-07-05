@@ -3,6 +3,7 @@ import { addUser, GenericComponents, getUsers, SignedContent, UserDocument } fro
 import styles from './page.module.css';
 import { useEffect, useState } from 'react';
 
+
 export default function LinguafixServer() {
   const [users, setUsers] = useState<UserDocument[]>()
   const [cpt, setCpt] = useState<number>(0)
@@ -10,8 +11,10 @@ export default function LinguafixServer() {
   useEffect(() => {
     const getAwaitUsers = async () =>  {
       const users = await getUsers()
-      setCpt(users.length+1)
-      setUsers(users)
+      if (users) {
+        setCpt(users.length+1)
+        setUsers(users)
+      }
     }
 
     getAwaitUsers()
@@ -37,7 +40,7 @@ export default function LinguafixServer() {
   }
 
   return (
-    <SignedContent>
+    <SignedContent publicContent={<h3>Public</h3>}>
     <div className={styles['container']}>
       <GenericComponents></GenericComponents>
       <ul>
