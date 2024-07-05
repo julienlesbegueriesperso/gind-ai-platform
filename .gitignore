@@ -46,4 +46,6 @@ Thumbs.db
 out
 
 .env
+.env.local
+
 
