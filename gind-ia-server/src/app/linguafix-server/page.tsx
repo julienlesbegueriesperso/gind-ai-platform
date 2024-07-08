@@ -7,7 +7,7 @@ import { AppBar, MenuItem, Toolbar, useTheme } from '@mui/material';
 import { BackHand, Home, Undo } from '@mui/icons-material';
 
 
-export function LingaFixDashboard() {
+function LingaFixDashboard() {
   const context =  useContext(GindIAContext)
 
   const [currentProject, setCurrentProject] = useState<ProjectDocument>()

@@ -30,7 +30,7 @@
     "../dist/gind-ia-server/.next/types/**/*.ts",
     "next-env.d.ts",
     ".next/types/**/*.ts"
-  ],
+, "src/lib/linguafix-dashboard.tsx"  ],
   "exclude": [
     "node_modules",
     "jest.config.ts",
