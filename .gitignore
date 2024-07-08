@@ -50,4 +50,4 @@ out
 .env.production
 
 
-./gind-ia-database
+**/gind-ia-database
