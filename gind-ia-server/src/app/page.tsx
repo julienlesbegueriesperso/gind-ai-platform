@@ -1,5 +1,5 @@
 'use client'
-import { GenericComponents, SignedContent } from '@gind-ia-platform/generic-components';
+import { GenericComponents, SignedContent, Welcome } from '@gind-ia-platform/generic-components';
 import styles from './page.module.css';
 
 import Link from 'next/link';
@@ -12,8 +12,8 @@ import Link from 'next/link';
     return (
             <div>
             <SignedContent publicContent={<p>public content</p>}><>
-              <GenericComponents></GenericComponents>
-              <h4>Link to <Link href="/linguafix-server">linguifix</Link></h4>
+              <Welcome></Welcome>
+              <h4>Link to <Link scroll={false} href="/linguafix-server">linguifix</Link></h4>
               </>
             </SignedContent>
 

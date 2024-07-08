@@ -8,14 +8,6 @@ import Link from 'next/link';
 
 export default function LinguafixServer() {
 
-
-  const context = useContext(GindIAContext)
-
-  useEffect(() => {
-    console.log("===")
-    console.log(context)
-  }, [context])
-
   // useEffect(() => {
   //   const getAwaitUsers = async () =>  {
   //     const users = await getUsers()
@@ -49,16 +41,18 @@ export default function LinguafixServer() {
 
   return (
     <SignedContent publicContent={<h3>Public</h3>}>
-    <div className={styles['container']}>
-      <GenericComponents></GenericComponents>
-      <h4>Link to <Link href="/">Home</Link></h4>
-      {context && <div>CONTEXT</div>}
-      {context && context.currentUser && <h2>{JSON.stringify(context.currentUser)||""}</h2>}
-      {/* <ul>
-        {users && users.map((u,i) => <li key={i+""}>{u.email}</li>)}
-      </ul> */}
-      <button onClick={() => {}}>Add</button>
-    </div>
+      <div className={styles['container']}>
+        <h4>Link to <Link scroll={false} href="/">Home</Link></h4>
+
+        <GindIAContext.Consumer>
+          {(context) => <div>{JSON.stringify(context)}</div>}
+        </GindIAContext.Consumer>
+
+        {/* <ul>
+          {users && users.map((u,i) => <li key={i+""}>{u.email}</li>)}
+        </ul> */}
+
+      </div>
     </SignedContent>
   );
 }

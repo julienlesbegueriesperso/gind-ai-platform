@@ -4,7 +4,7 @@ import React, { useContext, useEffect, useState } from "react"
 import Image from 'next/image'
 import logoPic from "./logo.jpg" //'./cosmos_logo_app.svg'
 import { Login, Logout } from "@mui/icons-material"
-import ProjectMenu from "../project/project-menu"
+import ProjectMenu from "../components/project-components/project-menu"
 import GindIAContext from "../context/gind-ia-context"
 import { UserDocument } from "../models/user"
 import { addUser, getUserByEmail } from "../services/user-service"
@@ -28,10 +28,8 @@ export function SigninIndex(props:SigninIndexProps) {
   useEffect(() => {
 
     if (session && session.user && session.user.email) {
-      console.log("session", session)
       const getAwaitUser = async (email:string) => {
         let cu = await getUserByEmail(email)
-        console.log("cu", cu)
         if (!cu) {
           const tmp:UserDocument = {
             name: session.user?.name||"",
@@ -51,7 +49,7 @@ export function SigninIndex(props:SigninIndexProps) {
   // const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
   return (<GindIAContext.Provider value={{currentUser: currentUser}}>
-    <AppBar position="sticky">
+    <AppBar position="sticky" variant="outlined">
           <Toolbar>
           <IconButton
               size="small"
@@ -62,11 +60,11 @@ export function SigninIndex(props:SigninIndexProps) {
             >
               {/* <MenuIcon /> */}
               {/* <SvgIcon component={CosmosLogo} inheritViewBox></SvgIcon> */}
-              <Image src={logoPic} alt="Logo" width={75} height={75} ></Image>
+              <Image src={logoPic} alt="Logo" width={75} height={75} priority={true} ></Image>
           </IconButton>
-          {session && <ProjectMenu closeProject={() => {}} deleteProject={() => {}}
+          {/* {session && <ProjectMenu closeProject={() => {}} deleteProject={() => {}}
           projects={[]}
-          openProject={() => {}} getProjectName={() => "kk"}/>}
+          openProject={() => {}} getProjectName={() => "kk"}/>} */}
           <div style={{position:"fixed", right:"20pt"}}>
           {session &&
           <div>
@@ -86,10 +84,11 @@ export function SigninIndex(props:SigninIndexProps) {
     </AppBar>
     {/* <Offset /> */}
     <div style={{margin:"10pt", overflow:"auto", height:"80vh"}}>
+
     {session && props.children}
     {!session && props.publicContent}
-    {session && <div>session {JSON.stringify(session)}</div>}
-    {currentUser && <div>user {JSON.stringify(currentUser)}</div>}
+    {/* {session && <div>session {JSON.stringify(session)}</div>}
+    {currentUser && <div>user {JSON.stringify(currentUser)}</div>} */}
     </div>
     <footer style={{display: "flex", justifyContent: "center",
                     padding: "3vh", backgroundColor: theme.palette.primary.main,

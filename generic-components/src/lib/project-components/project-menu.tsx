@@ -2,7 +2,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import { Button, CssBaseline, Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, MenuList, Paper, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import ProjectNewDialog from './project-new-dialog';
-import Project, { ProjectDocument }  from "../models/project"
+import Project, { ProjectDocument }  from "../../models/project"
 import ProjectDeleteDialog from './project-delete-dialog';
 import ProjectOpenDialog from './project-open-dialog';
 import { Add, Close, Delete, Folder, FolderOpen, Save } from '@mui/icons-material';
