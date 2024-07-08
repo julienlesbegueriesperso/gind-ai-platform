@@ -1,12 +1,109 @@
 'use client'
-import { addUser, GenericComponents, getUser, getUsers, GindIAContext, SignedContent, UserDocument } from '@gind-ia-platform/generic-components';
+import {  addProject, deleteProject, getProject, getProjectsByOwner, GindIAContext, ProjectDocument, ProjectMenu, SignedContent, updateUser, UserDocument } from '@gind-ia-platform/generic-components';
 import styles from './page.module.css';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
+import { AppBar, MenuItem, Toolbar, useTheme } from '@mui/material';
+import { BackHand, Home, Undo } from '@mui/icons-material';
 
 
+export function LingaFixDashboard() {
+  const context =  useContext(GindIAContext)
+
+  const [currentProject, setCurrentProject] = useState<ProjectDocument>()
+  const [existingProjects, setExistingProjects] = useState<ProjectDocument[]>()
+  // const [currentUser, setCurrentUser] = useState<UserDocument>()
+
+  // useEffect(() =>  {
+  //   if (context && context.currentUser) {
+  //     console.log("effet 1")
+  //     setCurrentUser(context.currentUser)
+  //   }
+  // }, [context])
+
+  const addAwaitProject = useCallback(async (projectName:string) => {
+    console.log("add await project")
+    if (context && context.currentUser) {
+      const newProject:ProjectDocument = {
+        name: projectName,
+        owner: context.currentUser.name,
+        channels: []
+      }
+      const added = await addProject(newProject)
+      setCurrentProject(newProject)
+      setExistingProjects(e => [...e?e:[], newProject])
+      const updatedUser = {...context.currentUser, currentProject:projectName}
+      // setCurrentUser(updatedUser)
+      const up = await updateUser(JSON.parse(JSON.stringify(updatedUser)))
+      console.log("update", up)
+  }
+
+  }, [context])
+
+
+
+  const deleteAwaitProject = useCallback(async (name:string) => {
+    const d = await deleteProject(name)
+    setCurrentProject(undefined)
+    if (context && context.currentUser) {
+      const u = {...context.currentUser, currentProject:undefined}
+      await updateUser(u)
+    }
+  }, [context])
+
+  const getAwaitProject = useCallback(async (name:string) => {
+    console.log("get await project")
+    const project = await getProject(name)
+    setCurrentProject(project)
+    if (context && context.currentUser) {
+      const updatedUser = {...context.currentUser, currentProject:project.name}
+      // setCurrentUser(updatedUser)
+      await updateUser(updatedUser)
+    }
+
+  }, [context])
+
+  // const addAwaitProject = useCallback(async (newProject:Projec))
+
+  const getAwaitProjects = useCallback(async (owner:string) => {
+    console.log("get await projects")
+    const projects  = await getProjectsByOwner(owner)
+    setExistingProjects(projects)
+  },[])
+
+  useEffect(() => {
+    if (context && context.currentUser) {
+      // setCurrentUser(context.currentUser)
+      console.log("get projects & project")
+      getAwaitProjects(context.currentUser.name)
+      if (context.currentUser.currentProject) {
+        getAwaitProject(context.currentUser.currentProject)
+      }
+    }
+
+  }, [context, getAwaitProject, getAwaitProjects])
+
+  return (<>
+  <AppBar position='relative' color="info" >
+          <Toolbar>
+            <MenuItem>
+          <Link  scroll={false} href="/"><Home/></Link></MenuItem>
+          <ProjectMenu
+          closeProject={() => setCurrentProject(undefined)}
+          openProject={(name) => getAwaitProject(name)}
+          deleteProject={(name) => deleteAwaitProject(name)}
+          projects={existingProjects||[]}
+          getProjectName={(newProjectName) => addAwaitProject(newProjectName)}
+          ></ProjectMenu>
+      </Toolbar>
+        </AppBar>
+        <div>{JSON.stringify(currentProject)}</div>
+  </>)
+}
 
 export default function LinguafixServer() {
+
+  const theme = useTheme()
 
   // useEffect(() => {
   //   const getAwaitUsers = async () =>  {
@@ -42,15 +139,8 @@ export default function LinguafixServer() {
   return (
     <SignedContent publicContent={<h3>Public</h3>}>
       <div className={styles['container']}>
-        <h4>Link to <Link scroll={false} href="/">Home</Link></h4>
+        <LingaFixDashboard></LingaFixDashboard>
 
-        <GindIAContext.Consumer>
-          {(context) => <div>{JSON.stringify(context)}</div>}
-        </GindIAContext.Consumer>
-
-        {/* <ul>
-          {users && users.map((u,i) => <li key={i+""}>{u.email}</li>)}
-        </ul> */}
 
       </div>
     </SignedContent>

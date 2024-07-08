@@ -4,6 +4,7 @@ import { UserDocument } from "../models/user"
 
 export interface GindIAContextProps {
     currentUser: UserDocument|undefined,
+    setCurrentUser: (user:UserDocument) => void
 }
 
 export const GindIAContext = React.createContext<GindIAContextProps|undefined>(undefined);

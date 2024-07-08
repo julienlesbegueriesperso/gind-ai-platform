@@ -3,6 +3,7 @@ export * from './lib/models/project';
 export * from './lib/generic-components';
 
 export * from './lib/services/user-service';
+export * from './lib/services/project-service';
 export * from './lib/auth/signin-index';
 export * from './lib/auth/signed-content';
 

@@ -1,23 +1,6 @@
 'use server'
 import  User, { UserDocument }  from "../models/user"
-import mongoose from "mongoose";
-
-const { MONGODB_URI } = process.env;
-console.log("MONGOOSE URI : ", MONGODB_URI)
-export const connectDB = async () => {
-
-  try {
-    const { connection } = await mongoose.connect(MONGODB_URI as string);
-    if (connection.readyState === 1) {
-      return Promise.resolve(connection);
-    }
-
-  } catch (error) {
-    console.error(error);
-    return Promise.reject(error);
-  }
-};
-
+import { connectDB } from "./connection-service";
 
 export async function getUsers() {
   const connection = await connectDB();
@@ -46,6 +29,24 @@ export async function getUser(name:string) {
   return user;
 }
 
+export async function updateUser(user:UserDocument) {
+  console.log("update user ", user.name)
+  const connection = await connectDB();
+  if (connection) {
+
+    const foundUser = await User.findOneAndUpdate<UserDocument>({email: user.email},
+                 {currentProject:user.currentProject},
+                {new:true}
+    );
+    console.log("update", foundUser)
+    return JSON.parse(JSON.stringify(foundUser));
+
+  }
+  return undefined
+
+}
+
+
 export async function getUserByEmail(email:string) {
   const connection = await connectDB();
   let user
@@ -63,9 +64,11 @@ export async function getUserByEmail(email:string) {
 }
 
 export async function addUser(newUser:UserDocument) {
+  console.log("add user", newUser.name)
   const connection = await connectDB();
   if (connection) {
     const foundUser = await getUserByEmail(newUser.email)
+    console.log("found add user ?", foundUser)
     if (!foundUser) {
       const added = await User.insertMany([newUser])
       console.log(added)

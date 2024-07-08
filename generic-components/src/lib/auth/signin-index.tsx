@@ -22,9 +22,6 @@ export function SigninIndex(props:SigninIndexProps) {
 
   const [currentUser, setCurrentUser] = useState<UserDocument>()
 
-
-
-
   useEffect(() => {
 
     if (session && session.user && session.user.email) {
@@ -36,10 +33,12 @@ export function SigninIndex(props:SigninIndexProps) {
             email: session.user?.email||"",
             createdAt: new Date(),
           }
+          console.log("adding user")
           await addUser(tmp)
           cu = tmp
         }
         setCurrentUser(cu)
+        console.log("current user", cu)
       }
       getAwaitUser(session.user.email)
     }
@@ -48,7 +47,7 @@ export function SigninIndex(props:SigninIndexProps) {
 
   // const Offset = styled('div')(({ theme }) => theme.mixins.toolbar);
 
-  return (<GindIAContext.Provider value={{currentUser: currentUser}}>
+  return (<GindIAContext.Provider value={{currentUser: currentUser, setCurrentUser: setCurrentUser}}>
     <AppBar position="sticky" variant="outlined">
           <Toolbar>
           <IconButton
@@ -83,7 +82,7 @@ export function SigninIndex(props:SigninIndexProps) {
           </Toolbar>
     </AppBar>
     {/* <Offset /> */}
-    <div style={{margin:"10pt", overflow:"auto", height:"80vh"}}>
+    <div style={{overflow:"auto", height:"80vh"}}>
 
     {session && props.children}
     {!session && props.publicContent}

@@ -29,6 +29,9 @@ const UserSchema = new Schema<UserDocument>({
   name: {
     type: String,
     required: [true, "Name is required"]
+  },
+  currentProject: {
+    type: String
   }
 },
 {
