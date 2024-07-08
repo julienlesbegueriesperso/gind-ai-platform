@@ -3,12 +3,13 @@ import  mongoose, { Schema, model } from  "mongoose";
 
 export interface UserDocument {
   email: string;
-  password: string;
+  // password: string;
   name: string;
-  phone: string;
-  image: string;
+  // phone: string;
+  // image: string;
   createdAt: Date;
-  updatedAt: Date;
+  currentProject?:string;
+  // updatedAt: Date;
 }
 
 const UserSchema = new Schema<UserDocument>({
@@ -21,10 +22,10 @@ const UserSchema = new Schema<UserDocument>({
       "Email is invalid",
     ],
   },
-  password: {
-    type: String,
-    required: true
-  },
+  // password: {
+  //   type: String,
+  //   required: true
+  // },
   name: {
     type: String,
     required: [true, "Name is required"]
