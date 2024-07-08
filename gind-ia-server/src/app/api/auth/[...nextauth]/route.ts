@@ -12,5 +12,8 @@ const handler = NextAuth({
   ]
 })
 
+console.log("===========================================")
+console.log(process.env.KEYCLOAK_ISSUER)
+
 export { handler as GET, handler as POST }
 

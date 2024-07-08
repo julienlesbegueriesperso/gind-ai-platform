@@ -1,0 +1,15 @@
+services:
+  mongodb:
+    image: "mongodb/mongodb-community-server"
+    volumes:
+      - ./gind-ia-database:/data/db
+    ports:
+      - 27017:27017
+
+  gind-ia-server:
+    image: "gind-ia-server:main"
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongodb
+

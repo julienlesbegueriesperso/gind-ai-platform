@@ -47,6 +47,7 @@ out
 
 .env
 .env.local
+.env.production
 
 
 ./gind-ia-database

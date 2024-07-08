@@ -3,6 +3,7 @@ import  User, { UserDocument }  from "../models/user"
 import mongoose from "mongoose";
 
 const { MONGODB_URI } = process.env;
+console.log("MONGOOSE URI : ", MONGODB_URI)
 export const connectDB = async () => {
 
   try {
