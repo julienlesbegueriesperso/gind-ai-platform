@@ -12,6 +12,7 @@ export * from  './lib/components/project-components/project-delete-dialog';
 export * from  './lib/components/project-components/project-edition-menu';
 export * from  './lib/components/project-components/project-new-dialog';
 export * from  './lib/components/project-components/project-open-dialog';
+export * from './lib/components/llm/chatbot';
 export * from './lib/components/welcome'
 
 export * from './lib/context/gind-ia-context';

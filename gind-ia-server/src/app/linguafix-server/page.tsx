@@ -1,5 +1,5 @@
 'use client'
-import {  addProject, deleteProject, getProject, getProjectsByOwner, GindIAContext, ProjectDocument, ProjectMenu, SignedContent, updateUser, UserDocument } from '@gind-ia-platform/generic-components';
+import {  addProject, deleteProject, getProject, getProjectsByOwner, GindChatBot, GindIAContext, ProjectDocument, ProjectMenu, SignedContent, updateUser, UserDocument } from '@gind-ia-platform/generic-components';
 import styles from './page.module.css';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -45,17 +45,21 @@ function LingaFixDashboard() {
   const deleteAwaitProject = useCallback(async (name:string) => {
     const d = await deleteProject(name)
     setCurrentProject(undefined)
+    if (existingProjects) {
+      setExistingProjects([...existingProjects.filter(p => p.name !== name)])
+    }
+
     if (context && context.currentUser) {
       const u = {...context.currentUser, currentProject:undefined}
       await updateUser(u)
     }
-  }, [context])
+  }, [context, existingProjects])
 
   const getAwaitProject = useCallback(async (name:string) => {
     console.log("get await project")
     const project = await getProject(name)
     setCurrentProject(project)
-    if (context && context.currentUser) {
+    if (context && context.currentUser && project) {
       const updatedUser = {...context.currentUser, currentProject:project.name}
       // setCurrentUser(updatedUser)
       await updateUser(updatedUser)
@@ -140,8 +144,7 @@ export default function LinguafixServer() {
     <SignedContent publicContent={<h3>Public</h3>}>
       <div className={styles['container']}>
         <LingaFixDashboard></LingaFixDashboard>
-
-
+        <GindChatBot></GindChatBot>
       </div>
     </SignedContent>
   );
