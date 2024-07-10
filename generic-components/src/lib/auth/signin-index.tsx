@@ -7,7 +7,9 @@ import { Login, Logout } from "@mui/icons-material"
 import ProjectMenu from "../components/project-components/project-menu"
 import GindIAContext from "../context/gind-ia-context"
 import { UserDocument } from "../models/user"
+import { ProjectDocument, ChannelDocument } from "../models/project"
 import { addUser, getUserByEmail } from "../services/user-service"
+import { addProject } from "../services/project-service"
 
 export interface SigninIndexProps {
   children: React.ReactNode
@@ -26,7 +28,7 @@ export function SigninIndex(props:SigninIndexProps) {
 
     if (session && session.user && session.user.email) {
       const getAwaitUser = async (email:string) => {
-        let cu = await getUserByEmail(email)
+        let cu:UserDocument = await getUserByEmail(email)
         if (!cu) {
           const tmp:UserDocument = {
             name: session.user?.name||"",
@@ -37,6 +39,20 @@ export function SigninIndex(props:SigninIndexProps) {
           await addUser(tmp)
           cu = tmp
         }
+        if (!cu.currentProject) {
+          const channel:ChannelDocument = {
+            name: "unnamed channel",
+            messages: []
+          }
+          const pr:ProjectDocument = {
+            name: "project",
+            owner: cu.email,
+            channels: [channel],
+          }
+          addProject(pr)
+          cu.currentProject = pr.name
+        }
+
         setCurrentUser(cu)
         console.log("current user", cu)
       }

@@ -12,6 +12,7 @@
     "@langchain/openai": "^0.2.1",
     "@mui/icons-material": "^5.15.21",
     "@mui/material": "^5.15.21",
+    "ai": "^3.2.19",
     "axios": "^1.7.2",
     "bson": "^6.8.0",
     "langchain": "^0.2.8",
@@ -19,11 +20,13 @@
     "next": "14.2.3",
     "next-auth": "^4.24.7",
     "ollama": "^0.5.2",
+    "ollama-ai-provider": "^0.10.0",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-oidc-context": "^3.1.0",
     "react-router-dom": "^6.24.1",
     "sharp": "^0.33.4",
+    "swr": "^2.2.5",
     "tslib": "^2.3.0"
   },
   "devDependencies": {

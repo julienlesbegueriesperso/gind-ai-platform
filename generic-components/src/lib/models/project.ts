@@ -1,29 +1,35 @@
 import  mongoose, { Schema, model } from  "mongoose";
 
 
-export interface Message {
+export interface MessageDocument {
   type: "ai"|"human"
   content:string
 }
 
-export interface Channel {
+export interface ChannelDocument {
   name:string;
-  messages: Message[];
+  messages: MessageDocument[];
 }
 
 export interface ProjectDocument {
 
   name: string;
   owner: string;
-  channels: Channel[];
+  channels: ChannelDocument[];
   currentChannel?: string;
   currentLLMModel?:string;
 }
-
-const ChannelSchema = new Schema<Channel>({
+const MessageSchema = new Schema<MessageDocument>({
+  type: {type: String},
+  content: {type: String}
+})
+const ChannelSchema = new Schema<ChannelDocument>({
   name: {
     type: String,
     required: [true, "name of channel is required"]
+  },
+  messages: {
+    type: [MessageSchema]
   }
 })
 
@@ -57,4 +63,7 @@ const ProjectSchema = new Schema<ProjectDocument>({
 
 
 const  Project  =  mongoose.models?.Project  ||  model<ProjectDocument>('Project', ProjectSchema);
+const Channel = mongoose.models?.Channel || model<ChannelDocument>('Channel', ChannelSchema);
+const Message = mongoose.models?.Message || model<MessageDocument>('Message', MessageSchema);
 export  default  Project;
+export {Channel, Message};

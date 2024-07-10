@@ -3,7 +3,8 @@
 import { PlayArrow } from "@mui/icons-material";
 import { Button, CircularProgress, FormControl, Grid, Paper, TextField, Typography } from "@mui/material";
 import {  Message } from "ollama"
-import { chat } from '../../services/llm-service'
+import { chat, chatStreaming } from '../../services/llm-service'
+import { readStreamableValue } from "ai/rsc";
 
 import { useCallback, useEffect, useState } from "react";
 
@@ -17,7 +18,7 @@ export  function OllamaChatBot(props: OllamaChatBotProps) {
   const [targetLanguage, setTargetLanguage] = useState("French")
   const [waiting, setWaiting] = useState(false)
 
-  const translate = useCallback(() => {
+  const translate = useCallback(async () => {
     setWaiting(true)
     const systemMessage:Message = {
       role: "system",
@@ -32,25 +33,23 @@ export  function OllamaChatBot(props: OllamaChatBotProps) {
       systemMessage,
       humanMessage
     ]
-    chat(props.currentLLMModel, messages).then(res => {
-      setResult(res)
-      setWaiting(false)
-    })
-    .catch(err => {
-      console.log(err)
-      setWaiting(false)
-    })
+    const {_, newMessage} = await chatStreaming(props.currentLLMModel, messages)
+    let textContent = "";
 
-
+            for await (const delta of readStreamableValue(newMessage)) {
+              textContent = `${textContent}${delta}`;
+              setWaiting(false)
+              setResult(textContent)
+            }
   }, [props.currentLLMModel, targetLanguage, textInput])
 
   return (
   <Paper>
+    <Grid gap={2} spacing={2} container>
+    <Grid item xl={10}>
     <FormControl>
     <Typography textTransform="uppercase">Translation</Typography>
-      <Grid gap={2} spacing={2} container>
 
-      <Grid item xl={10}>
       <TextField
       label="Text input"
       multiline={true}
@@ -59,21 +58,21 @@ export  function OllamaChatBot(props: OllamaChatBotProps) {
       onChange={(e) => setTextInput(e.target.value)}
       placeholder="Enter your input here"
       ></TextField>
-      </Grid>
-      <Grid item>
       <TextField
       label="Target Language"
       value={targetLanguage}
       onChange={(e) => setTargetLanguage(e.target.value)}
       placeholder="Enter the target language here"
       ></TextField>
-      </Grid>
-      <Grid item xs={12}>
+
+
       <Button variant="outlined" onClick={translate}><PlayArrow></PlayArrow></Button>
-      </Grid>
-      </Grid>
     </FormControl>
-    {waiting ? <CircularProgress/> :<div>{result}</div>}
+    </Grid>
+    <Grid item>
+    {waiting ? <CircularProgress/> :<Typography>{result}</Typography>}
+    </Grid>
+    </Grid>
   </Paper>
   )
 

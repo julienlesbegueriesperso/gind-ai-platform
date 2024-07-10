@@ -8,13 +8,27 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { AppBar, MenuItem, Toolbar, useTheme } from '@mui/material';
 import { BackHand, Home, Undo } from '@mui/icons-material';
+import useSWR from "swr";
 
+const fetcher = async (url: string) => {
+  const res = await fetch(url);
+
+
+  if (res.status !== 200) {
+    throw new Error(res.statusText);
+  }
+  return res.text;
+};
 
 function LingaFixDashboard() {
   const context =  useContext(GindIAContext)
 
   const [currentProject, setCurrentProject] = useState<ProjectDocument>()
   const [existingProjects, setExistingProjects] = useState<ProjectDocument[]>()
+
+
+
+
 
   const addAwaitProject = useCallback(async (projectName:string) => {
     console.log("add await project")
@@ -96,7 +110,7 @@ function LingaFixDashboard() {
           ></ProjectMenu>
       </Toolbar>
         </AppBar>
-        {/* <div>{JSON.stringify(currentProject)}</div> */}
+
         {currentProject && (<OllamaChatBot currentLLMModel='llama3:8b'></OllamaChatBot>)}
   </>)
 }

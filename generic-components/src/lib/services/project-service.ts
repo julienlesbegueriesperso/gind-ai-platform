@@ -17,6 +17,24 @@ export async function getProject(name:string): Promise<ProjectDocument> {
   return project;
 }
 
+export async function updateProject(project:ProjectDocument) {
+  console.log("update project ", project.name)
+  const connection = await connectDB();
+  if (connection) {
+
+    const foundProject = await Project.findOneAndUpdate<ProjectDocument>({name: project.name},
+                 {currentLLMModel: project.currentLLMModel, currentChannel:project.currentChannel},
+                {new:true}
+    );
+    console.log("update", foundProject)
+    return JSON.parse(JSON.stringify(foundProject));
+
+  }
+  return undefined
+
+}
+
+
 export async function getProjectsByOwner(owner:string): Promise<ProjectDocument[]> {
   const connection = await connectDB();
   let projects;
