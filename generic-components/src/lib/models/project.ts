@@ -16,6 +16,8 @@ export interface ProjectDocument {
   name: string;
   owner: string;
   channels: Channel[];
+  currentChannel?: string;
+  currentLLMModel?:string;
 }
 
 const ChannelSchema = new Schema<Channel>({
@@ -37,6 +39,13 @@ const ProjectSchema = new Schema<ProjectDocument>({
   },
   channels: {
     type: [ChannelSchema]
+  },
+
+  currentChannel: {
+    type: String,
+  },
+  currentLLMModel: {
+    type: String
   }
 
 },

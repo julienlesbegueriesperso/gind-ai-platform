@@ -17,9 +17,9 @@ export async function getUser(name:string) {
   const connection = await connectDB();
   let user
   if (connection) {
-    console.log("find user ", name)
+
     user = await User.findOne<UserDocument>({name: name});
-    console.log("found user", user)
+
     if (user) {
       user = JSON.parse(JSON.stringify(user))
     }
@@ -51,15 +51,14 @@ export async function getUserByEmail(email:string) {
   const connection = await connectDB();
   let user
   if (connection) {
-    console.log("find user ", email)
+
     user = await User.findOne<UserDocument>({email});
-    console.log("found user", user)
+
     if (user) {
       user = JSON.parse(JSON.stringify(user))
     }
     // connection.close()
   }
-  console.log(user)
   return user;
 }
 

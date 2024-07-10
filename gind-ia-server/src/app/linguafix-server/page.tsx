@@ -1,5 +1,8 @@
 'use client'
-import {  addProject, deleteProject, getProject, getProjectsByOwner, GindChatBot, GindIAContext, ProjectDocument, ProjectMenu, SignedContent, updateUser, UserDocument } from '@gind-ia-platform/generic-components';
+import {  addProject, deleteProject, getProject, getProjectsByOwner, GindChatBot,
+  OllamaChatBot,
+  GindIAContext, ProjectDocument, ProjectMenu, SignedContent, updateUser, UserDocument
+   } from '@gind-ia-platform/generic-components';
 import styles from './page.module.css';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
@@ -12,14 +15,6 @@ function LingaFixDashboard() {
 
   const [currentProject, setCurrentProject] = useState<ProjectDocument>()
   const [existingProjects, setExistingProjects] = useState<ProjectDocument[]>()
-  // const [currentUser, setCurrentUser] = useState<UserDocument>()
-
-  // useEffect(() =>  {
-  //   if (context && context.currentUser) {
-  //     console.log("effet 1")
-  //     setCurrentUser(context.currentUser)
-  //   }
-  // }, [context])
 
   const addAwaitProject = useCallback(async (projectName:string) => {
     console.log("add await project")
@@ -101,7 +96,8 @@ function LingaFixDashboard() {
           ></ProjectMenu>
       </Toolbar>
         </AppBar>
-        <div>{JSON.stringify(currentProject)}</div>
+        {/* <div>{JSON.stringify(currentProject)}</div> */}
+        {currentProject && (<OllamaChatBot currentLLMModel='llama3:8b'></OllamaChatBot>)}
   </>)
 }
 
@@ -144,7 +140,7 @@ export default function LinguafixServer() {
     <SignedContent publicContent={<h3>Public</h3>}>
       <div className={styles['container']}>
         <LingaFixDashboard></LingaFixDashboard>
-        <GindChatBot></GindChatBot>
+        {/* <GindChatBot></GindChatBot> */}
       </div>
     </SignedContent>
   );
