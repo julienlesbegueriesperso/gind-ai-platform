@@ -8,27 +8,23 @@ import {
   CardContent,
   CardHeader,
   CircularProgress,
-  TextareaAutosize,
   FormControl,
-  Grid,
-  Paper,
   TextField,
-  Typography,
   CardActions,
   Stack,
 } from '@mui/material';
 import { Message } from 'ollama';
-import { chat, chatStreaming } from '../../services/llm-service';
+import { chatStreaming } from '../../services/llm-service';
 import { readStreamableValue } from 'ai/rsc';
 
-import { createRef, useCallback, useEffect, useRef, useState } from 'react';
+import { createRef, useCallback, useState } from 'react';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 
 export interface OllamaChatBotProps {
   currentLLMModel: string;
 }
-export function OllamaChatBot(props: OllamaChatBotProps) {
+export function OllamaChatBotTranslate(props: OllamaChatBotProps) {
   const [result, setResult] = useState('');
   const [textInput, setTextInput] = useState('');
   const [targetLanguage, setTargetLanguage] = useState('French');
@@ -79,7 +75,7 @@ export function OllamaChatBot(props: OllamaChatBotProps) {
     <Card variant="outlined">
       <CardHeader
         avatar={
-          <Avatar sx={{ cursor: 'grab' }} id="draghandler">
+          <Avatar sx={{ cursor: 'grab' }} id="draghandlert">
             <Translate />
           </Avatar>
         }

@@ -15,7 +15,9 @@ export * from  './lib/components/project-components/project-edition-menu';
 export * from  './lib/components/project-components/project-new-dialog';
 export * from  './lib/components/project-components/project-open-dialog';
 export * from './lib/components/llm/chatbot';
-export * from './lib/components/llm/ollama-chatbot';
+export * from './lib/components/llm/ollama-translate';
+export * from './lib/components/llm/ollama-rephrase';
+export * from './lib/components/llm/ollama-generic';
 
 export * from './lib/components/welcome'
 

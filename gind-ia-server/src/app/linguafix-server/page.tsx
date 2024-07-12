@@ -1,6 +1,5 @@
 'use client'
-import {  addProject, deleteProject, getProject, getProjectsByOwner, GindChatBot,
-  OllamaChatBot,
+import {  addProject, deleteProject, getProject, getProjectsByOwner,
   GindIAContext, ProjectDocument, ProjectMenu, SignedContent, updateUser, UserDocument
    } from '@gind-ia-platform/generic-components';
 import styles from './page.module.css';
@@ -99,7 +98,7 @@ import { BackHand, Home, Undo } from '@mui/icons-material';
       </Toolbar>
         </AppBar>
 
-        {currentProject && (<OllamaChatBot currentLLMModel='llama3:8b'></OllamaChatBot>)}
+        {/* {currentProject && (<OllamaChatBot currentLLMModel='llama3:8b'></OllamaChatBot>)} */}
   </>)
 }
 
@@ -143,7 +142,7 @@ export default function LinguafixServer() {
   return (
     <SignedContent publicContent={<h3>Public</h3>}>
       <div className={styles['container']}>
-        <LingaFixDashboard></LingaFixDashboard>
+        {/* <LingaFixDashboard></LingaFixDashboard> */}
         {/* <GindChatBot></GindChatBot> */}
       </div>
     </SignedContent>
