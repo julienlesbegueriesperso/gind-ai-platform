@@ -8,27 +8,15 @@ import { useCallback, useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { AppBar, MenuItem, Toolbar, useTheme } from '@mui/material';
 import { BackHand, Home, Undo } from '@mui/icons-material';
-import useSWR from "swr";
-
-const fetcher = async (url: string) => {
-  const res = await fetch(url);
 
 
-  if (res.status !== 200) {
-    throw new Error(res.statusText);
-  }
-  return res.text;
-};
 
-function LingaFixDashboard() {
+
+ function LingaFixDashboard() {
   const context =  useContext(GindIAContext)
 
   const [currentProject, setCurrentProject] = useState<ProjectDocument>()
   const [existingProjects, setExistingProjects] = useState<ProjectDocument[]>()
-
-
-
-
 
   const addAwaitProject = useCallback(async (projectName:string) => {
     console.log("add await project")
@@ -101,19 +89,21 @@ function LingaFixDashboard() {
           <Toolbar>
             <MenuItem>
           <Link  scroll={false} href="/"><Home/></Link></MenuItem>
-          <ProjectMenu
+          {/* <ProjectMenu
           closeProject={() => setCurrentProject(undefined)}
           openProject={(name) => getAwaitProject(name)}
           deleteProject={(name) => deleteAwaitProject(name)}
           projects={existingProjects||[]}
           getProjectName={(newProjectName) => addAwaitProject(newProjectName)}
-          ></ProjectMenu>
+          ></ProjectMenu> */}
       </Toolbar>
         </AppBar>
 
         {currentProject && (<OllamaChatBot currentLLMModel='llama3:8b'></OllamaChatBot>)}
   </>)
 }
+
+
 
 export default function LinguafixServer() {
 

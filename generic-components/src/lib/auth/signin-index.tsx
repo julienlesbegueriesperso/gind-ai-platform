@@ -83,7 +83,7 @@ export function SigninIndex(props:SigninIndexProps) {
           <div style={{position:"fixed", right:"20pt"}}>
           {session &&
           <div>
-          <Typography display="inline-block" margin="5pt">Signed in as {session.user?.email}</Typography>
+
           <Button sx={{display:"inline-block"}} variant="contained" startIcon={<Logout/>} onClick={() => signOut()}>Sign out</Button>
         </div>
         }
@@ -107,7 +107,9 @@ export function SigninIndex(props:SigninIndexProps) {
     </div>
     <footer style={{display: "flex", justifyContent: "center",
                     padding: "3vh", backgroundColor: theme.palette.primary.main,
-                    }}></footer>
+                    }}>
+                      {session && <Typography variant="body2" display="inline-block" margin="5pt">Signed in as {JSON.stringify(session.user)}</Typography>}
+                    </footer>
     </GindIAContext.Provider>
 
   )
