@@ -4,10 +4,11 @@ import { getListOfLLMModels,
    OllamaChatBotRephrase, OllamaChatBotTranslate, SignedContent } from '@gind-ia-platform/generic-components';
 
 import { createRef, useEffect, useState } from 'react';
-import { AppBar, FormControl, InputLabel, MenuItem, Select, Toolbar, useTheme } from '@mui/material';
+import { AppBar, FormControl, InputLabel, Link, MenuItem, Select, Toolbar, useTheme } from '@mui/material';
 import Draggable from 'react-draggable'; // The default
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { Chat } from '@mui/icons-material';
 
 
   export default function Index() {
@@ -43,8 +44,9 @@ import 'react-toastify/dist/ReactToastify.css';
               <Toolbar>
                 {models && currentModel && (
                   <FormControl sx={{ width: '10vw' }} margin="normal">
-                    <InputLabel>LLM Model chosen</InputLabel>
+                    <InputLabel sx={{margin:'-5pt'}} shrink={true}>LLM Model chosen</InputLabel>
                     <Select
+                    notched={true}
                       color="secondary"
                       type="text"
                       value={currentModel}
@@ -59,11 +61,11 @@ import 'react-toastify/dist/ReactToastify.css';
                     </Select>
                   </FormControl>
                 )}
-                {/* <MenuItem>
-              <Link scroll={false} href="/linguafix-server">
-                <Translate /> Translate
+                <MenuItem>
+              <Link  href="/chat">
+                <Chat/> Chat
               </Link>
-            </MenuItem> */}
+            </MenuItem>
               </Toolbar>
             </AppBar>
             <div
@@ -81,7 +83,7 @@ import 'react-toastify/dist/ReactToastify.css';
                 handle="#draghandlert"
                 bounds="#dragparent"
               >
-                <div style={{ width: '28%' }} ref={nodeRef1}>
+                <div style={{position:"absolute",top:5, left:5, width: '28%' }} ref={nodeRef1}>
                   {currentModel && (
                     <OllamaChatBotTranslate
                       currentLLMModel={currentModel}
@@ -90,11 +92,12 @@ import 'react-toastify/dist/ReactToastify.css';
                 </div>
               </Draggable>
               <Draggable
+
                 nodeRef={nodeRef2}
                 handle="#draghandlerr"
                 bounds="#dragparent"
               >
-                <div style={{ width: '28%' }} ref={nodeRef2}>
+                <div style={{position:"absolute", top:5, left:600, width: '28%' }} ref={nodeRef2}>
                   {currentModel && (
                     <OllamaChatBotRephrase
                       currentLLMModel={currentModel}
@@ -103,11 +106,12 @@ import 'react-toastify/dist/ReactToastify.css';
                 </div>
               </Draggable>
               <Draggable
+
                 nodeRef={nodeRef3}
                 handle="#draghandlerg"
                 bounds="#dragparent"
               >
-                <div style={{ width: '28%' }} ref={nodeRef3}>
+                <div style={{position:"absolute", top:5, left:1200, width: '28%' }} ref={nodeRef3}>
                   {currentModel && (
                     <OllamaChatBotGeneric currentLLMModel={currentModel}></OllamaChatBotGeneric>
                   )}
