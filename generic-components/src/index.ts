@@ -19,6 +19,8 @@ export * from './lib/components/llm/ollama-translate';
 export * from './lib/components/llm/ollama-rephrase';
 export * from './lib/components/llm/ollama-generic';
 
+export * from './lib/components/file-upload/drag-and-drop';
+
 export * from './lib/components/welcome'
 
 export * from './lib/context/gind-ia-context';

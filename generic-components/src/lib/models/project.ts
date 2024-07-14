@@ -2,7 +2,7 @@ import  mongoose, { Schema, model } from  "mongoose";
 
 
 export interface MessageDocument {
-  type: "ai"|"human"
+  type: "assistant"|"human" | "system"
   content:string
 }
 

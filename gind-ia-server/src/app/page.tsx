@@ -1,14 +1,12 @@
 'use client'
 import { getListOfLLMModels,
    OllamaChatBotGeneric,
-   OllamaChatBotRephrase, OllamaChatBotTranslate, SignedContent } from '@gind-ia-platform/generic-components';
+   OllamaChatBotRephrase, OllamaChatBotTranslate } from '@gind-ia-platform/generic-components';
 
 import { createRef, useEffect, useState } from 'react';
-import { AppBar, FormControl, InputLabel, Link, MenuItem, Select, Toolbar, useTheme } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, Toolbar, useTheme } from '@mui/material';
 import Draggable from 'react-draggable'; // The default
-import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Chat } from '@mui/icons-material';
 
 
   export default function Index() {
@@ -38,9 +36,9 @@ import { Chat } from '@mui/icons-material';
 
     return (
       <div>
-        <SignedContent publicContent={<p>public content</p>}>
-          <>
-            <AppBar position="relative" color="transparent" variant="outlined">
+        {/* <SignedContent publicContent={<p>public content</p>}>
+          <> */}
+            {/* <AppBar position="relative" color="transparent" variant="outlined"> */}
               <Toolbar>
                 {models && currentModel && (
                   <FormControl sx={{ width: '10vw' }} margin="normal">
@@ -62,12 +60,9 @@ import { Chat } from '@mui/icons-material';
                   </FormControl>
                 )}
                 <MenuItem>
-              <Link  href="/chat">
-                <Chat/> Chat
-              </Link>
             </MenuItem>
               </Toolbar>
-            </AppBar>
+            {/* </AppBar> */}
             <div
               id="dragparent"
               style={{
@@ -118,9 +113,9 @@ import { Chat } from '@mui/icons-material';
                 </div>
               </Draggable>
             </div>
-          </>
+          {/* </>
         </SignedContent>
-        <ToastContainer />
+        <ToastContainer /> */}
       </div>
     );
 
