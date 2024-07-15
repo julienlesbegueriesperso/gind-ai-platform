@@ -3,15 +3,18 @@
 import { Button, Paper, Typography } from "@mui/material";
 import { useState } from "react";
 
+export interface FileUploadProps {
+  getFiles: (files:string[]) => void
+}
 
-export const FileUpload = () => {
+export const FileUpload = (props:FileUploadProps) => {
   const [files, setFiles] = useState<string[]>();
   const [fileNames, setFileNames] = useState<string[]>();
 
   const [fileEnter, setFileEnter] = useState(false);
   return (
     <Paper variant="outlined" sx={{paddingLeft:"1rem",
-    paddingRight:"1rem",maxWidth:"64rem"}} >
+    paddingRight:"1rem"}} >
       {!files? (
         <div
           onDragOver={(e) => {
@@ -66,6 +69,7 @@ export const FileUpload = () => {
           <input
             id="file"
             type="file"
+            multiple={true}
             className="hidden"
             onChange={(e) => {
               console.log(e.target.files);
@@ -83,12 +87,12 @@ export const FileUpload = () => {
           />
         </div>
       ) : (
-        <div className="flex flex-col items-center">
+        <div >
           {files && files.map((file,i) => (
             <div key={i+""}>
               {fileNames && <Typography>{fileNames[i]}</Typography>}
               <object
-              style={{"borderRadius":"0.375rem","width":"100%","maxWidth":"20rem","height":"18rem"}}
+              style={{"borderRadius":"0.375rem","width":"100%","height":"18rem"}}
               aria-label="arialabel"
               data={file}
               type="application/pdf" //need to be updated based on type of file
@@ -98,9 +102,15 @@ export const FileUpload = () => {
 
           <Button
             onClick={() => setFiles(undefined)}
-            sx={{"paddingTop":"0.5rem","paddingBottom":"0.5rem","paddingLeft":"1rem","paddingRight":"1rem","marginTop":"2.5rem","borderRadius":"0.25rem","outlineStyle":"none","letterSpacing":"0.1em","color":"#ffffff","textTransform":"uppercase","backgroundColor":"#DC2626"}}
+            sx={{"paddingTop":"0.5rem","paddingBottom":"0.5rem","paddingLeft":"1rem","paddingRight":"1rem","margin":"2.5rem","borderRadius":"0.25rem","outlineStyle":"none","letterSpacing":"0.1em","color":"#ffffff","textTransform":"uppercase","backgroundColor":"#DC2626"}}
           >
             Reset
+          </Button>
+          <Button
+            onClick={() => props.getFiles(files)}
+            sx={{"paddingTop":"0.5rem","paddingBottom":"0.5rem","paddingLeft":"1rem","paddingRight":"1rem","margin":"2.5rem","borderRadius":"0.25rem","outlineStyle":"none","letterSpacing":"0.1em","color":"#ffffff","textTransform":"uppercase","backgroundColor":"#4444FF"}}
+          >
+            Index
           </Button>
         </div>
       )}

@@ -64,6 +64,12 @@ export default function OllamaChatBot() {
     setCurrentModel(e.target.value);
   };
 
+  const getFiles = (files:string[]) => {
+    for (const file of files) {
+      console.log(file)
+    }
+  }
+
   useEffect(() => {
     getListOfLLMModels().then((models) => {
       setModels(models);
@@ -245,10 +251,10 @@ export default function OllamaChatBot() {
         </CardActions>
       </Card>}
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={5}>
         <Card>
           <CardContent>
-      <FileUpload/>
+      <FileUpload getFiles={getFiles}/>
       </CardContent>
       </Card>
       </Grid>

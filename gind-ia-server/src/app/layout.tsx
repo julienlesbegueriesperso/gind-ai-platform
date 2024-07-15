@@ -18,14 +18,14 @@ export default function RootLayout({
   return (
     <html lang="en">
      <body>
-      <SignedContent publicContent={<p>public content</p>} links={<>
+      <SignedContent publicContent={<p>public content</p>} links={<Toolbar>
               <Link  href="/" style={{margin:"5pt"}}>
                 <Home color="inherit"></Home>Home
               </Link>
                <Link  href="/chat" style={{margin:"5pt"}}>
                 <Chat color="inherit"/> Chat
               </Link>
-      </>}>
+      </Toolbar>}>
             {/* <AppBar position="relative" color="transparent" variant="outlined">
           <Toolbar>
           <Link  href="/chat">

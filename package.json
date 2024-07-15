@@ -16,6 +16,7 @@
     "ai": "^3.2.23",
     "axios": "^1.7.2",
     "bson": "^6.8.0",
+    "chromadb": "^1.8.1",
     "copy-to-clipboard": "^3.3.3",
     "langchain": "^0.2.8",
     "mongoose": "^8.4.4",
