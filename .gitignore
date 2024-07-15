@@ -54,3 +54,4 @@ out
 
 **/gind-ia-database
 **/*.log
+**/chroma_db_path
