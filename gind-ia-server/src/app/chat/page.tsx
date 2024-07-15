@@ -160,7 +160,7 @@ export default function OllamaChatBot() {
       </AppBar>
       <Grid container gap={2}>
         <Grid item xs={6}>
-      <Card variant="outlined" sx={{margin:"20pt", background:'lavenderblush'}}>
+      {currentModel &&  <Card variant="outlined" sx={{margin:"20pt", background:'lavenderblush'}}>
         <CardHeader
           avatar={
             <Avatar sx={{ cursor: 'grab' }} id="draghandlerg">
@@ -243,7 +243,7 @@ export default function OllamaChatBot() {
             </Button>
           </Stack>
         </CardActions>
-      </Card>
+      </Card>}
       </Grid>
       <Grid item xs={3}>
         <Card>
