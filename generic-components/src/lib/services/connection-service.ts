@@ -1,7 +1,8 @@
 
+'use server'
 import mongoose from "mongoose";
 
-const { MONGODB_URI } = process.env;
+const {   MONGODB_URI } = process.env;
 console.log("MONGOOSE URI : ", MONGODB_URI)
 export const connectDB = async () => {
 

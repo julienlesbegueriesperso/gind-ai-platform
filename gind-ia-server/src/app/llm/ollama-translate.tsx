@@ -14,7 +14,7 @@ import {
   Stack,
 } from '@mui/material';
 import { Message } from 'ollama';
-import { chatStreaming } from '../../services/llm-service';
+import { chatStreaming } from '../llm-service';
 import { readStreamableValue } from 'ai/rsc';
 
 import { createRef, useCallback, useState } from 'react';
@@ -64,6 +64,7 @@ export function OllamaChatBotTranslate(props: OllamaChatBotProps) {
     );
     let textContent = '';
 
+    // for await (const delta of newMessage)
     for await (const delta of readStreamableValue(newMessage)) {
       textContent = `${textContent}${delta}`;
       setWaiting(false);

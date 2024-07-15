@@ -38,7 +38,7 @@ export const FileUpload = () => {
                 }
               });
             } else {
-              [...e.dataTransfer.files].forEach((file, i) => {
+              [...e.dataTransfer.files as any].forEach((file, i) => {
                 console.log(`… file[${i}].name = ${file.name}`);
               });
             }

@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react';
 import dts from 'vite-plugin-dts';
 import * as path from 'path';
 import { nxViteTsPaths } from '@nx/vite/plugins/nx-tsconfig-paths.plugin';
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 
 export default defineConfig({
   root: __dirname,
@@ -12,6 +13,8 @@ export default defineConfig({
   plugins: [
     react(),
     nxViteTsPaths(),
+    nodePolyfills(),
+
     dts({
       entryRoot: 'src',
       tsconfigPath: path.join(__dirname, 'tsconfig.lib.json'),
@@ -44,6 +47,12 @@ export default defineConfig({
     rollupOptions: {
       // External packages that should not be bundled into your library.
       external: ['react', 'react-dom', 'react/jsx-runtime'],
+      onwarn(warning, warn) {
+        // if (warning.code === "MODULE_LEVEL_DIRECTIVE") {
+        //   return;
+        // }
+        warn(warning);
+      },
     },
   },
 });

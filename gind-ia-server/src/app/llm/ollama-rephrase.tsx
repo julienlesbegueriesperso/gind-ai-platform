@@ -14,7 +14,7 @@ import {
   Stack,
 } from '@mui/material';
 import { Message } from 'ollama';
-import { chatStreaming } from '../../services/llm-service';
+import { chatStreaming } from '../llm-service';
 import { readStreamableValue } from 'ai/rsc';
 
 import { createRef, useCallback, useState } from 'react';

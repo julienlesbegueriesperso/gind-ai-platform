@@ -26,4 +26,14 @@ EXPOSE 3000
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry.
 ENV NEXT_TELEMETRY_DISABLED 1
+
+# ## THE LIFE SAVER
+ENV WAIT_VERSION 2.7.2
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/$WAIT_VERSION/wait /wait
+USER root
+RUN chmod +x /wait
+
+
+
+
 CMD ["dumb-init", "node_modules/.bin/next", "start"]

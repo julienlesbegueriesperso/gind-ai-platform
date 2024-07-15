@@ -27,12 +27,12 @@ import {
   Toolbar,
   TextareaAutosize,
   Grid,
+  SelectChangeEvent,
 } from '@mui/material';
 import { Message } from 'ollama';
 import {
-  chatStreaming,
+
   FileUpload,
-  getListOfLLMModels,
   Message as MessageDB,
 } from '@gind-ia-platform/generic-components';
 import { readStreamableValue } from 'ai/rsc';
@@ -40,6 +40,7 @@ import { readStreamableValue } from 'ai/rsc';
 import { createRef, useCallback, useEffect, useState } from 'react';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
+import { chatStreaming, getListOfLLMModels } from '../llm-service';
 
 export default function OllamaChatBot() {
 
@@ -59,7 +60,7 @@ export default function OllamaChatBot() {
   const textRef = createRef<HTMLTextAreaElement>(); //useRef<HTMLTextAreaElement>(null);
   const endMessageRef = createRef<HTMLDivElement>();
 
-  const updateCurrentModel = (e) => {
+  const updateCurrentModel = (e:SelectChangeEvent<string>) => {
     setCurrentModel(e.target.value);
   };
 

@@ -7,6 +7,7 @@ import { connectDB } from "./connection-service";
 
 
 export async function getProject(name:string): Promise<ProjectDocument> {
+  'use server'
   const connection = await connectDB();
   let project;
   if (connection) {
@@ -18,6 +19,7 @@ export async function getProject(name:string): Promise<ProjectDocument> {
 }
 
 export async function updateProject(project:ProjectDocument) {
+  'use server'
   console.log("update project ", project.name)
   const connection = await connectDB();
   if (connection) {
@@ -36,6 +38,7 @@ export async function updateProject(project:ProjectDocument) {
 
 
 export async function getProjectsByOwner(owner:string): Promise<ProjectDocument[]> {
+  'use server'
   const connection = await connectDB();
   let projects;
   if (connection) {
@@ -47,6 +50,7 @@ export async function getProjectsByOwner(owner:string): Promise<ProjectDocument[
 }
 
 export async function addProject(newProject:ProjectDocument) {
+  'use server'
   const connection = await connectDB();
   if (connection) {
     console.log("add project", newProject)
@@ -61,6 +65,7 @@ export async function addProject(newProject:ProjectDocument) {
 
 
 export async function deleteProject(name:string) {
+  'use server'
   const connection = await connectDB();
   if (connection) {
     const foundProject = await getProject(name)

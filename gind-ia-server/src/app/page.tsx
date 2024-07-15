@@ -1,10 +1,11 @@
 'use client'
-import { getListOfLLMModels,
-   OllamaChatBotGeneric,
-   OllamaChatBotRephrase, OllamaChatBotTranslate } from '@gind-ia-platform/generic-components';
+import { OllamaChatBotGeneric } from '../app/llm/ollama-generic';
+import { OllamaChatBotTranslate } from '../app/llm/ollama-translate';
+import { OllamaChatBotRephrase } from '../app/llm/ollama-rephrase';
+import { getListOfLLMModels } from "../app/llm-service";
 
 import { createRef, useEffect, useState } from 'react';
-import { FormControl, InputLabel, MenuItem, Select, Toolbar, useTheme } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Toolbar, useTheme } from '@mui/material';
 import Draggable from 'react-draggable'; // The default
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -20,13 +21,15 @@ import 'react-toastify/dist/ReactToastify.css';
     const nodeRef2 =  createRef<HTMLDivElement>();
     const nodeRef3 =  createRef<HTMLDivElement>();
 
-    const updateCurrentModel = (e) => {
+    const updateCurrentModel = (e:SelectChangeEvent<string>) => {
       setCurrentModel(e.target.value)
 
     }
 
     useEffect(() => {
+      console.log("get models")
       getListOfLLMModels().then(models => {
+        console.log(models)
         setModels(models)
         if (models.length > 0) {
           setCurrentModel(models[0])

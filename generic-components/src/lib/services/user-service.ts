@@ -3,6 +3,7 @@ import  User, { UserDocument }  from "../models/user"
 import { connectDB } from "./connection-service";
 
 export async function getUsers() {
+  'use server'
   const connection = await connectDB();
   let users;
   if (connection) {
@@ -14,6 +15,7 @@ export async function getUsers() {
 }
 
 export async function getUser(name:string) {
+  'use server'
   const connection = await connectDB();
   let user
   if (connection) {
@@ -30,6 +32,7 @@ export async function getUser(name:string) {
 }
 
 export async function updateUser(user:UserDocument) {
+  'use server'
   console.log("update user ", user.name)
   const connection = await connectDB();
   if (connection) {
@@ -48,6 +51,7 @@ export async function updateUser(user:UserDocument) {
 
 
 export async function getUserByEmail(email:string) {
+  'use server'
   const connection = await connectDB();
   let user
   if (connection) {
@@ -63,6 +67,7 @@ export async function getUserByEmail(email:string) {
 }
 
 export async function addUser(newUser:UserDocument) {
+  'use server'
   console.log("add user", newUser.name)
   const connection = await connectDB();
   if (connection) {

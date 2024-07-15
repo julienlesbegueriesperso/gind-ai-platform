@@ -4,7 +4,7 @@ export * from './lib/generic-components';
 
 export * from './lib/services/user-service';
 export * from './lib/services/project-service';
-export * from './lib/services/llm-service';
+
 
 export * from './lib/auth/signin-index';
 export * from './lib/auth/signed-content';
@@ -14,10 +14,7 @@ export * from  './lib/components/project-components/project-delete-dialog';
 export * from  './lib/components/project-components/project-edition-menu';
 export * from  './lib/components/project-components/project-new-dialog';
 export * from  './lib/components/project-components/project-open-dialog';
-export * from './lib/components/llm/chatbot';
-export * from './lib/components/llm/ollama-translate';
-export * from './lib/components/llm/ollama-rephrase';
-export * from './lib/components/llm/ollama-generic';
+
 
 export * from './lib/components/file-upload/drag-and-drop';
 

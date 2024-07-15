@@ -19,5 +19,5 @@
     "**/*.spec.jsx",
     "**/*.test.jsx"
   ],
-  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx", "../gind-ia-server/src/lib/linguafix-dashboard.tsx"]
+  "include": ["src/**/*.js", "src/**/*.jsx", "src/**/*.ts", "src/**/*.tsx", "../gind-ia-server/src/lib/linguafix-dashboard.tsx", "../gind-ia-server/src/app/llm-service.ts"]
 }

@@ -1,4 +1,10 @@
 services:
+  # ollama:
+  #   image: "ollama/ollama"
+  #   volumes:
+  #     - ./ollama:/root/.ollama
+  #   ports:
+  #     - 11434:11434
   mongodb:
     image: "mongodb/mongodb-community-server"
     volumes:
@@ -12,4 +18,11 @@ services:
       - 3000:3000
     depends_on:
       - mongodb
-
+      # - ollama
+    extra_hosts:
+    - "host.docker.internal:host-gateway"
+    environment:
+      - WAIT_HOSTS=mongodb:27017
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=10
+      - WAIT_HOST_CONNECT_TIMEOUT=30

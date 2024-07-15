@@ -4,9 +4,12 @@
     "allowJs": false,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
+    "module": "Node16",
+    "moduleResolution": "Node16",
     "strict": true,
-    "types": ["vite/client"]
+    "types": ["vite/client"],
   },
+
   "files": [],
   "include": [],
   "references": [
