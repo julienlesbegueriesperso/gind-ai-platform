@@ -2,6 +2,8 @@
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const { composePlugins, withNx } = require('@nx/next');
+const path = require('path');
+
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
@@ -12,6 +14,21 @@ const nextConfig = {
     // See: https://github.com/gregberge/svgr
     svgr: false,
 
+  },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Fixes npm packages that depend on `fs` module
+      config.resolve.fallback.fs = false;
+      // Fix for pdf-parse issue with 'fs' module on client-side
+      config.resolve.alias['fs'] = path.resolve(__dirname, './mocks/fs.js');
+    }
+
+    config.module.rules.push({
+      test: /\.node$/,
+      use: 'node-loader',
+    });
+
+    return config;
   },
 };
 

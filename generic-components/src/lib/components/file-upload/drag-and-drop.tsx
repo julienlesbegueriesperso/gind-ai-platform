@@ -1,15 +1,20 @@
 "use client";
 
-import { Button, Paper, Typography } from "@mui/material";
+import { Button, CardActions, Checkbox, FormControlLabel, Paper, Stack, Typography } from "@mui/material";
 import { useState } from "react";
+import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
+import { Document } from "@langchain/core/documents";
 
 export interface FileUploadProps {
-  getFiles: (files:string[]) => void
+  getDocuments: (docs:Document[]) => void
 }
+
 
 export const FileUpload = (props:FileUploadProps) => {
   const [files, setFiles] = useState<string[]>();
+  const [filteredFiles, setFilteredFiles] = useState<boolean[]>([])
   const [fileNames, setFileNames] = useState<string[]>();
+  const [documents, setDocuments] = useState<{[key:string]: Document<Record<string,any>>[]}>({})
 
   const [fileEnter, setFileEnter] = useState(false);
   return (
@@ -42,12 +47,19 @@ export const FileUpload = (props:FileUploadProps) => {
                     const blobUrl = URL.createObjectURL(file);
                     tmpFiles.push(blobUrl)
                     tmpFileNames.push(file.name)
+                    const loader = new WebPDFLoader(file)
+                    loader.load().then(docs => {
+                    documents[blobUrl] = docs
+                    console.log(documents)
+                    setDocuments({...documents})
+                  })
                     // setFile(blobUrl);
                   }
                   console.log(`file.name = ${file?.name}`);
                 }
                 setFiles(tmpFiles)
                 setFileNames(tmpFileNames)
+                setFilteredFiles(Array.from({ length: tmpFiles.length }, (x, i) => true))
               // });
               }
             } else {
@@ -82,15 +94,51 @@ export const FileUpload = (props:FileUploadProps) => {
                   // setFile(blobUrl);
                 }
                 setFiles(tmpFiles)
+                setFilteredFiles(Array.from({ length: tmpFiles.length }, (x, i) => true))
               }
             }}
           />
         </div>
       ) : (
-        <div >
+        <Stack>
+          <CardActions>
+           <Button
+            onClick={() => {
+              setFiles(undefined)
+              setFilteredFiles([])
+            }}
+            sx={{"paddingTop":"0.5rem","paddingBottom":"0.5rem","paddingLeft":"1rem","paddingRight":"1rem","margin":"1.5rem","borderRadius":"0.25rem","outlineStyle":"none","letterSpacing":"0.1em","color":"#ffffff","textTransform":"uppercase","backgroundColor":"#DC2626"}}
+          >
+            Reset
+          </Button>
+          <Button
+            // onClick={() => props.getDocuments(files.filter((f, i) => filteredFiles[i] === true))}
+            onClick={() => {
+              const selectedFiles = files.filter((f, i) => filteredFiles[i] === true)
+              const res:{[key:string]: Document<Record<string,any>>[]} = {}
+              for (const key of selectedFiles) {
+                if (key in documents) {
+                  res[key] = documents[key]
+                }
+              }
+              props.getDocuments(
+                Object.values(res).flat().map(d => ({pageContent: d.pageContent, metadata: d.metadata}))
+            )
+          }
+        }
+            sx={{"paddingTop":"0.5rem","paddingBottom":"0.5rem","paddingLeft":"1rem","paddingRight":"1rem","margin":"1.5rem","borderRadius":"0.25rem","outlineStyle":"none","letterSpacing":"0.1em","color":"#ffffff","textTransform":"uppercase","backgroundColor":"#4444FF"}}
+          >
+            Index
+          </Button>
+          </CardActions>
           {files && files.map((file,i) => (
             <div key={i+""}>
-              {fileNames && <Typography>{fileNames[i]}</Typography>}
+              {fileNames && <Typography>{file}</Typography>}
+              {fileNames && <FormControlLabel label={fileNames[i]} control={<Checkbox checked={filteredFiles[i]}
+                          onChange={(e) => {
+                            filteredFiles[i] = !filteredFiles[i]
+                            setFilteredFiles([...filteredFiles])
+                          }}></Checkbox>}></FormControlLabel>}
               <object
               style={{"borderRadius":"0.375rem","width":"100%","height":"18rem"}}
               aria-label="arialabel"
@@ -99,20 +147,8 @@ export const FileUpload = (props:FileUploadProps) => {
             />
           </div>
           ))}
-
-          <Button
-            onClick={() => setFiles(undefined)}
-            sx={{"paddingTop":"0.5rem","paddingBottom":"0.5rem","paddingLeft":"1rem","paddingRight":"1rem","margin":"2.5rem","borderRadius":"0.25rem","outlineStyle":"none","letterSpacing":"0.1em","color":"#ffffff","textTransform":"uppercase","backgroundColor":"#DC2626"}}
-          >
-            Reset
-          </Button>
-          <Button
-            onClick={() => props.getFiles(files)}
-            sx={{"paddingTop":"0.5rem","paddingBottom":"0.5rem","paddingLeft":"1rem","paddingRight":"1rem","margin":"2.5rem","borderRadius":"0.25rem","outlineStyle":"none","letterSpacing":"0.1em","color":"#ffffff","textTransform":"uppercase","backgroundColor":"#4444FF"}}
-          >
-            Index
-          </Button>
-        </div>
+          {/* {filteredFiles && <p>{JSON.stringify(filteredFiles)}</p>} */}
+        </Stack>
       )}
     </Paper>
   );

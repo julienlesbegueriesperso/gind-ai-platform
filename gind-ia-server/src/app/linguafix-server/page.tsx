@@ -140,11 +140,6 @@ export default function LinguafixServer() {
   // }
 
   return (
-    <SignedContent publicContent={<h3>Public</h3>} links={<></>}>
-      <div className={styles['container']}>
-        {/* <LingaFixDashboard></LingaFixDashboard> */}
-        {/* <GindChatBot></GindChatBot> */}
-      </div>
-    </SignedContent>
+    <>tutu</>
   );
 }

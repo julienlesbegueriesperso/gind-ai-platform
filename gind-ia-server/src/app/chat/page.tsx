@@ -41,6 +41,8 @@ import { createRef, useCallback, useEffect, useState } from 'react';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { chatStreaming, getListOfLLMModels } from '../llm-service';
+import { indexDocuments } from '../rag-service';
+import { Document } from "@langchain/core/documents";
 
 export default function OllamaChatBot() {
 
@@ -60,14 +62,20 @@ export default function OllamaChatBot() {
   const textRef = createRef<HTMLTextAreaElement>(); //useRef<HTMLTextAreaElement>(null);
   const endMessageRef = createRef<HTMLDivElement>();
 
+  const [filesToIndex, setFilesToIndex] = useState<string[]>()
+
   const updateCurrentModel = (e:SelectChangeEvent<string>) => {
     setCurrentModel(e.target.value);
   };
 
-  const getFiles = (files:string[]) => {
-    for (const file of files) {
-      console.log(file)
-    }
+  const getDocuments = (docs:Document[]) => {
+
+    indexDocuments(docs)
+    // for (const file of files) {
+    //   console.log(file)
+    // }
+    // setFilesToIndex(files)
+    // indexDocuments(files)
   }
 
   useEffect(() => {
@@ -254,7 +262,7 @@ export default function OllamaChatBot() {
       <Grid item xs={5}>
         <Card>
           <CardContent>
-      <FileUpload getFiles={getFiles}/>
+      <FileUpload getDocuments={getDocuments}/>
       </CardContent>
       </Card>
       </Grid>
