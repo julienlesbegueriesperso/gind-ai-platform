@@ -3,6 +3,7 @@
 import {
   Article,
   Computer,
+  Delete,
   Face,
   People,
   Send,
@@ -81,6 +82,7 @@ export default function OllamaChatBot() {
   const context = useContext(GindIAContext)
 
   const getDocuments = async (docs:Document[]) => {
+    toast.info("Number of indexed docs " + docs.length)
     if (docs && docs.length === 0) {
       setIsRag(false)
       if (context && context.currentUser && context.currentUser.currentProject) {
@@ -89,12 +91,17 @@ export default function OllamaChatBot() {
     } else {
       setWaiting(true)
       if (context && context.currentUser && context.currentUser.currentProject) {
-        await indexDocuments(docs, context.currentUser.name, context.currentUser.currentProject)
-        if (context && context.currentUser && context.currentUser.currentProject) {
-          setIsRag(true)
+        const res = await indexDocuments(docs, context.currentUser.name, context.currentUser.currentProject)
+        console.log("index", res)
+        if (res === "ok") {
+          if (context && context.currentUser && context.currentUser.currentProject) {
+            setIsRag(true)
+          }
+        } else {
+          toast.error("error")
         }
       } else {
-        toast("error")
+        toast.error("error")
       }
       setWaiting(false)
   }
@@ -149,6 +156,7 @@ export default function OllamaChatBot() {
           
           
         `
+      console.log(input)
       } else {
         toast("error")
       }
@@ -230,8 +238,10 @@ export default function OllamaChatBot() {
               <SmartToy />
             </Avatar>
           }
+          action={<Button onClick={() => setMessages([])} startIcon={<Delete/>}>Clear all</Button>}
           title="Assistant"
-        />
+        >
+        </CardHeader>
         <CardContent>
           <FormControl fullWidth>
             <TextField
@@ -249,6 +259,7 @@ export default function OllamaChatBot() {
               <Box key={i + ''}>
                 {m.role === 'user' && <Face />}
                 {m.role === 'assistant' && <SmartToy />}
+                <Button onClick={() => setMessages([...messages.filter((m,j) => j!==i )]) }><Delete color='error'></Delete></Button>
                 <TextareaAutosize
                   key={i + ''}
                   ref={textRef}
@@ -282,7 +293,7 @@ export default function OllamaChatBot() {
 
               </Box>
             )}
-<div ref={endMessageRef}></div>
+<div  style={{background:'yellow'}} ref={endMessageRef}></div>
             </div>
             <TextField
               sx={{background:'white'}}
@@ -309,7 +320,7 @@ export default function OllamaChatBot() {
       </Card>}
       </Grid>
       <Grid item xs={5}>
-        <Card>
+        <Card sx={{overflow: "auto", height: "74vh"}}> 
           <CardContent>
             {waiting && <CircularProgress/>}
       <FileUpload getDocuments={getDocuments}/>

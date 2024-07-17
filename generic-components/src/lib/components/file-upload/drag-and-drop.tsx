@@ -130,7 +130,7 @@ export const FileUpload = (props:FileUploadProps) => {
               }
               setIndexEnabled(false)
               props.getDocuments(
-                Object.values(res).flat().map(d => ({pageContent: d.pageContent, metadata: d.metadata}))
+                Object.values(res).flat().map(d => ({pageContent: d.pageContent, metadata: JSON.parse(JSON.stringify(d.metadata))}))
               )
 
           }

@@ -77,9 +77,10 @@ export function SigninIndex(props:SigninIndexProps) {
               {/* <MenuIcon /> */}
               {/* <SvgIcon component={CosmosLogo} inheritViewBox></SvgIcon> */}
               <Image src={logoPic} alt="Logo" width={75} height={75} priority={true} ></Image>
-              <span style={{width:'5pt'}}></span>
-              {props.links}
+             
           </IconButton>
+          {/* <span style={{width:'5pt'}}></span> */}
+          {props.links}
           {/* {session && <ProjectMenu closeProject={() => {}} deleteProject={() => {}}
           projects={[]}
           openProject={() => {}} getProjectName={() => "kk"}/>} */}

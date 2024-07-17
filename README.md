@@ -1,5 +1,14 @@
 # GindIaPlatform
 
+
+export NEXTAUTH_URL=http://192.168.13.55:3000
+
+
+
+
+
+
+
 https://dev.to/ppaanngggg/how-to-use-ollama-for-front-end-with-streaming-output-5efj
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>

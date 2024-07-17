@@ -7,7 +7,7 @@ import { getListOfLLMModels } from "../app/llm-service";
 import { createRef, useEffect, useState } from 'react';
 import { FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Toolbar, useTheme } from '@mui/material';
 import Draggable from 'react-draggable'; // The default
-import 'react-toastify/dist/ReactToastify.css';
+
 
 
   export default function Index() {

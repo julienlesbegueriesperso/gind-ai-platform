@@ -1,9 +1,12 @@
 'use client'
 import { SignedContent } from '@gind-ia-platform/generic-components';
-import { AppBar, Toolbar } from '@mui/material';
+import { AppBar, MenuItem, Toolbar, Typography } from '@mui/material';
 import './global.css';
 import { Chat, Home } from '@mui/icons-material';
 import Link from 'next/link';
+import { useActivePath } from './nav-helper'
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 // export const metadata = {
 //   title: 'Welcome to gind-ia-server',
@@ -15,17 +18,27 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const checkActivePath = useActivePath()
+
   return (
     <html lang="en">
      <body>
-      <SignedContent publicContent={<p>public content</p>} links={<Toolbar>
-              <Link  href="/" style={{margin:"5pt"}}>
-                <Home color="inherit"></Home>Home
+      <SignedContent publicContent={<p>public content</p>} links={
+        <>
+          <MenuItem>
+              <Link  href="/" style={{margin:"5pt"}} >
+                <Home color={checkActivePath("/")?"info":"inherit"}></Home>
+                 <Typography sx={{color:checkActivePath("/")?"#A1A1A1":"inherit"}}>Home</Typography> 
               </Link>
-               <Link  href="/chat" style={{margin:"5pt"}}>
-                <Chat color="inherit"/> Chat
+              </MenuItem>
+              <MenuItem>
+               <Link  href="/chat" style={{margin:"5pt", color:checkActivePath("/chat")?"info":"inherit"}} >
+                <Chat color={checkActivePath("/chat")?"info":"inherit"}/> 
+                <Typography color={checkActivePath("/chat")?"#A1A1A1":"inherit"} >Chat</Typography> 
               </Link>
-      </Toolbar>}>
+              </MenuItem>
+      </>
+      }>
             {/* <AppBar position="relative" color="transparent" variant="outlined">
           <Toolbar>
           <Link  href="/chat">
@@ -36,6 +49,7 @@ export default function RootLayout({
             </AppBar> */}
             {children}
       </SignedContent>
+      <ToastContainer /> 
       </body>
     </html>
   );

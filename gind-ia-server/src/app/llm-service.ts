@@ -14,7 +14,7 @@ console.log(OLLAMA_BASE_URL)
 export async function getListOfLLMModels():Promise<string[]> {
   'use server'
   console.log(OLLAMA_BASE_URL)
-  const res = (await ollama.list()).models.map(m => m.name)
+  const res = (await ollama.list()).models.map(m => m.name).filter(n => n.startsWith("llama")||n.startsWith("mi"))
   return res
 }
 
