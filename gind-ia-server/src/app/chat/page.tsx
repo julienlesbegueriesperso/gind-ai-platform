@@ -33,20 +33,28 @@ import { Message } from 'ollama';
 import {
 
   FileUpload,
+  GindIAContext,
   Message as MessageDB,
 } from '@gind-ia-platform/generic-components';
 import { readStreamableValue } from 'ai/rsc';
 
-import { createRef, useCallback, useEffect, useState } from 'react';
+import { createRef, useCallback, useContext, useEffect, useState } from 'react';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { chatStreaming, getListOfLLMModels } from '../llm-service';
-import { indexDocuments } from '../rag-service';
+import { indexDocuments, removeIndex, retrieveFromDocs } from '../rag-service';
 import { Document } from "@langchain/core/documents";
+import { VectorStoreRetriever } from '@langchain/core/vectorstores';
+
+
+const DEFAULT_SYSTEM_PROMPT = 'You are an assistant expert in scientific writing.'
+const DEFAULT_SYSTEM_PROMPT_RAG = `You are an assistant expert in scientific writing. 
+You are using documents provided in context to answer queries. `
 
 export default function OllamaChatBot() {
 
 
+  
 
   /* Model and chat */
   const [currentModel, setCurrentModel] = useState<string>();
@@ -54,7 +62,7 @@ export default function OllamaChatBot() {
 
   const [textInput, setTextInput] = useState('');
   const [systemPrompt, setSystemPrompt] = useState(
-    'You are an assistant expert in scientific writing.'
+    DEFAULT_SYSTEM_PROMPT
   );
   const [waiting, setWaiting] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -64,18 +72,33 @@ export default function OllamaChatBot() {
 
   const [filesToIndex, setFilesToIndex] = useState<string[]>()
 
+  const [isRag, setIsRag] = useState(false)
+
   const updateCurrentModel = (e:SelectChangeEvent<string>) => {
     setCurrentModel(e.target.value);
   };
 
-  const getDocuments = (docs:Document[]) => {
+  const context = useContext(GindIAContext)
 
-    indexDocuments(docs)
-    // for (const file of files) {
-    //   console.log(file)
-    // }
-    // setFilesToIndex(files)
-    // indexDocuments(files)
+  const getDocuments = async (docs:Document[]) => {
+    if (docs && docs.length === 0) {
+      setIsRag(false)
+      if (context && context.currentUser && context.currentUser.currentProject) {
+        await removeIndex(context.currentUser.name, context.currentUser.currentProject)
+      }
+    } else {
+      setWaiting(true)
+      if (context && context.currentUser && context.currentUser.currentProject) {
+        await indexDocuments(docs, context.currentUser.name, context.currentUser.currentProject)
+        if (context && context.currentUser && context.currentUser.currentProject) {
+          setIsRag(true)
+        }
+      } else {
+        toast("error")
+      }
+      setWaiting(false)
+  }
+    
   }
 
   useEffect(() => {
@@ -106,7 +129,31 @@ export default function OllamaChatBot() {
 
   const generate = useCallback(async () => {
     setWaiting(true);
-    setTextInput("")
+    
+    let input = textInput
+
+    if (isRag) {
+      if (context && context.currentUser && context.currentUser.currentProject) {
+        const docs = await retrieveFromDocs(context.currentUser.name, context.currentUser.currentProject, input)
+        input = `
+
+          Based on the following context:
+          
+          
+          ${docs}
+          
+          
+          Answer the following query:
+
+          ${input}
+          
+          
+        `
+      } else {
+        toast("error")
+      }
+    }
+    
     let newAIMessage: Message = {
       role: 'assistant',
       content: "...",
@@ -118,7 +165,7 @@ export default function OllamaChatBot() {
     };
     const humanMessage: Message = {
       role: 'user',
-      content: `${textInput}`,
+      content: input // `${textInput}`,
     };
 
     const newMessages = [systemMessage, ...messages, humanMessage];
@@ -127,8 +174,10 @@ export default function OllamaChatBot() {
       currentModel || '',
       newMessages
     );
-    let textContent = '';
+    setTextInput("")
 
+    let textContent = '';
+    humanMessage.content = textInput
     setMessages([...messages, humanMessage]);
 
     for await (const delta of readStreamableValue(newMessage)) {
@@ -262,6 +311,7 @@ export default function OllamaChatBot() {
       <Grid item xs={5}>
         <Card>
           <CardContent>
+            {waiting && <CircularProgress/>}
       <FileUpload getDocuments={getDocuments}/>
       </CardContent>
       </Card>

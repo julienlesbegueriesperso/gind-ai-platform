@@ -17,6 +17,9 @@ export const FileUpload = (props:FileUploadProps) => {
   const [documents, setDocuments] = useState<{[key:string]: Document<Record<string,any>>[]}>({})
 
   const [fileEnter, setFileEnter] = useState(false);
+
+  const [indexEnabled, setIndexEnabled] = useState(true);
+
   return (
     <Paper variant="outlined" sx={{paddingLeft:"1rem",
     paddingRight:"1rem"}} >
@@ -106,13 +109,17 @@ export const FileUpload = (props:FileUploadProps) => {
             onClick={() => {
               setFiles(undefined)
               setFilteredFiles([])
+              setDocuments({})
+              setIndexEnabled(true)
+              props.getDocuments([])
             }}
             sx={{"paddingTop":"0.5rem","paddingBottom":"0.5rem","paddingLeft":"1rem","paddingRight":"1rem","margin":"1.5rem","borderRadius":"0.25rem","outlineStyle":"none","letterSpacing":"0.1em","color":"#ffffff","textTransform":"uppercase","backgroundColor":"#DC2626"}}
           >
             Reset
           </Button>
-          <Button
-            // onClick={() => props.getDocuments(files.filter((f, i) => filteredFiles[i] === true))}
+          { indexEnabled && <Button
+            
+            
             onClick={() => {
               const selectedFiles = files.filter((f, i) => filteredFiles[i] === true)
               const res:{[key:string]: Document<Record<string,any>>[]} = {}
@@ -121,15 +128,17 @@ export const FileUpload = (props:FileUploadProps) => {
                   res[key] = documents[key]
                 }
               }
+              setIndexEnabled(false)
               props.getDocuments(
                 Object.values(res).flat().map(d => ({pageContent: d.pageContent, metadata: d.metadata}))
-            )
+              )
+
           }
         }
             sx={{"paddingTop":"0.5rem","paddingBottom":"0.5rem","paddingLeft":"1rem","paddingRight":"1rem","margin":"1.5rem","borderRadius":"0.25rem","outlineStyle":"none","letterSpacing":"0.1em","color":"#ffffff","textTransform":"uppercase","backgroundColor":"#4444FF"}}
           >
             Index
-          </Button>
+          </Button>}
           </CardActions>
           {files && files.map((file,i) => (
             <div key={i+""}>
