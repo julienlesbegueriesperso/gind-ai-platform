@@ -1,10 +1,7 @@
 'use server'
 import { Chroma } from "@langchain/community/vectorstores/chroma";
-// import { PDFLoader } from "@langchain/community/document_loaders/fs/pdf";
-// import { WebPDFLoader } from "@langchain/community/document_loaders/web/pdf";
 import { OllamaEmbeddings } from "@langchain/community/embeddings/ollama";
 import { Document } from "@langchain/core/documents";
-import { UserDocument } from "@gind-ia-platform/generic-components";
 import { VectorStore, VectorStoreRetriever } from "@langchain/core/vectorstores";
 import { ChromaClient } from "chromadb";
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
@@ -25,6 +22,7 @@ const buildCollectionName = (currentUserName: string, currentProject: string) =>
 }
 
 export const removeIndex = async (currentUserName: string, currentProject: string) => {
+  'use server'
   const collectionName = buildCollectionName(currentUserName, currentProject)
   await chroma.deleteCollection({ name: collectionName })
   // await vectorStores[collectionName].delete({})
@@ -70,6 +68,7 @@ export const indexDocuments = async (docs: Document[], currentUserName: string, 
 
 
 export const retrieveFromDocs = async (currentUserName: string, currentProject: string, input: string) => {
+  'use server'
   const v = vectorStores[buildCollectionName(currentUserName, currentProject)]
   const retriever = v.asRetriever()
   retriever.k = 8
@@ -81,6 +80,7 @@ export const retrieveFromDocs = async (currentUserName: string, currentProject: 
 
 
 export const detectLanguage = async (extract:string, model:string) => {
+  'use server'
   const llm = new ChatOllama({model: model, temperature: 0.3})
   
   extract = extract.substring(0, Math.max(1000, extract.length-1))

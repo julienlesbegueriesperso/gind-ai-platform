@@ -46,14 +46,14 @@ import { toast } from 'react-toastify';
 import { chatStreaming, getListOfLLMModels } from '../llm-service';
 import { indexDocuments, removeIndex, retrieveFromDocs, summarizeDocs, detectLanguage } from '../rag-service';
 import { Document } from "@langchain/core/documents";
-import { VectorStoreRetriever } from '@langchain/core/vectorstores';
+
 
 
 const DEFAULT_SYSTEM_PROMPT = 'You are an assistant expert in scientific writing.'
 const DEFAULT_SYSTEM_PROMPT_RAG = `You are an assistant expert in scientific writing. 
 You are using documents provided in context to answer queries. `
 
-export const embeddingModels = ["mxbai-embed-large"]
+const embeddingModels = ["mxbai-embed-large"]
 
 
 
