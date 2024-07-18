@@ -7,6 +7,7 @@ import { Document } from "@langchain/core/documents";
 
 export interface FileUploadProps {
   getDocuments: (docs:Document[]) => void
+  summarizeDocs: (docs:Document[]) => void
 }
 
 
@@ -138,6 +139,25 @@ export const FileUpload = (props:FileUploadProps) => {
             sx={{"paddingTop":"0.5rem","paddingBottom":"0.5rem","paddingLeft":"1rem","paddingRight":"1rem","margin":"1.5rem","borderRadius":"0.25rem","outlineStyle":"none","letterSpacing":"0.1em","color":"#ffffff","textTransform":"uppercase","backgroundColor":"#4444FF"}}
           >
             Index
+          </Button>}
+          { indexEnabled && <Button
+            onClick={() => {
+              const selectedFiles = files.filter((f, i) => filteredFiles[i] === true)
+              const res:{[key:string]: Document<Record<string,any>>[]} = {}
+              for (const key of selectedFiles) {
+                if (key in documents) {
+                  res[key] = documents[key]
+                }
+              }
+              setIndexEnabled(false)
+              props.summarizeDocs(
+                Object.values(res).flat().map(d => ({pageContent: d.pageContent, metadata: JSON.parse(JSON.stringify(d.metadata))}))
+              )
+          }
+        }
+            sx={{"paddingTop":"0.5rem","paddingBottom":"0.5rem","paddingLeft":"1rem","paddingRight":"1rem","margin":"1.5rem","borderRadius":"0.25rem","outlineStyle":"none","letterSpacing":"0.1em","color":"#ffffff","textTransform":"uppercase","backgroundColor":"#4444FF"}}
+          >
+            Summarize and Index
           </Button>}
           </CardActions>
           {files && files.map((file,i) => (

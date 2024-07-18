@@ -34,7 +34,7 @@ export default function RootLayout({
               <MenuItem>
                <Link  href="/chat" style={{margin:"5pt", color:checkActivePath("/chat")?"info":"inherit"}} >
                 <Chat color={checkActivePath("/chat")?"info":"inherit"}/> 
-                <Typography color={checkActivePath("/chat")?"#A1A1A1":"inherit"} >Chat</Typography> 
+                <Typography color={checkActivePath("/chat")?"#A1A1A1":"inherit"} >RAG Chat</Typography> 
               </Link>
               </MenuItem>
       </>

@@ -29,6 +29,7 @@ import {
   TextareaAutosize,
   Grid,
   SelectChangeEvent,
+  Divider,
 } from '@mui/material';
 import { Message } from 'ollama';
 import {
@@ -43,7 +44,7 @@ import { createRef, useCallback, useContext, useEffect, useState } from 'react';
 import copy from 'copy-to-clipboard';
 import { toast } from 'react-toastify';
 import { chatStreaming, getListOfLLMModels } from '../llm-service';
-import { indexDocuments, removeIndex, retrieveFromDocs } from '../rag-service';
+import { indexDocuments, removeIndex, retrieveFromDocs, summarizeDocs, detectLanguage } from '../rag-service';
 import { Document } from "@langchain/core/documents";
 import { VectorStoreRetriever } from '@langchain/core/vectorstores';
 
@@ -52,6 +53,10 @@ const DEFAULT_SYSTEM_PROMPT = 'You are an assistant expert in scientific writing
 const DEFAULT_SYSTEM_PROMPT_RAG = `You are an assistant expert in scientific writing. 
 You are using documents provided in context to answer queries. `
 
+export const embeddingModels = ["mxbai-embed-large"]
+
+
+
 export default function OllamaChatBot() {
 
 
@@ -59,6 +64,7 @@ export default function OllamaChatBot() {
 
   /* Model and chat */
   const [currentModel, setCurrentModel] = useState<string>();
+  const [currentEmbeddingModel, setCurrentEmbeddingModel] = useState("mxbai-embed-large")
   const [models, setModels] = useState<string[]>();
 
   const [textInput, setTextInput] = useState('');
@@ -66,6 +72,7 @@ export default function OllamaChatBot() {
     DEFAULT_SYSTEM_PROMPT
   );
   const [waiting, setWaiting] = useState(false);
+  const [waitingSummary, setWaitingSummary] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [currentMessage, setCurrentMessage] = useState<Message>();
   const textRef = createRef<HTMLTextAreaElement>(); //useRef<HTMLTextAreaElement>(null);
@@ -82,7 +89,7 @@ export default function OllamaChatBot() {
   const context = useContext(GindIAContext)
 
   const getDocuments = async (docs:Document[]) => {
-    toast.info("Number of indexed docs " + docs.length)
+    toast.info("Number of docs to index " + docs.length)
     if (docs && docs.length === 0) {
       setIsRag(false)
       if (context && context.currentUser && context.currentUser.currentProject) {
@@ -91,11 +98,37 @@ export default function OllamaChatBot() {
     } else {
       setWaiting(true)
       if (context && context.currentUser && context.currentUser.currentProject) {
-        const res = await indexDocuments(docs, context.currentUser.name, context.currentUser.currentProject)
+        const res = await indexDocuments(docs, context.currentUser.name, context.currentUser.currentProject, currentEmbeddingModel)
         console.log("index", res)
         if (res === "ok") {
           if (context && context.currentUser && context.currentUser.currentProject) {
             setIsRag(true)
+          }
+        } else {
+          toast.error("index error")
+        }
+      } else {
+        toast.error("index error")
+      }
+      setWaiting(false)
+    }
+  }
+
+  const summarizeDocuments = async (docs:Document[]) => {
+    toast.info("Number of docs to summarize " + docs.length)
+    getDocuments(docs)
+    if (docs && docs.length === 0) {
+      if (context && context.currentUser && context.currentUser.currentProject) {
+        await removeIndex(context.currentUser.name, context.currentUser.currentProject)
+      }
+    } else {
+      setWaitingSummary(true)
+      if (context && context.currentUser && context.currentUser.currentProject && currentModel) {
+        const res = await summarizeDocs(docs, context.currentUser.name, context.currentUser.currentProject, currentModel)
+        console.log("index", res)
+        if (!res.startsWith("error")) {
+          if (context && context.currentUser && context.currentUser.currentProject) {
+            setMessages([...messages, {role: "assistant", content: res}])
           }
         } else {
           toast.error("error")
@@ -103,9 +136,8 @@ export default function OllamaChatBot() {
       } else {
         toast.error("error")
       }
-      setWaiting(false)
-  }
-    
+      setWaitingSummary(false)
+    }
   }
 
   useEffect(() => {
@@ -140,22 +172,46 @@ export default function OllamaChatBot() {
     let input = textInput
 
     if (isRag) {
-      if (context && context.currentUser && context.currentUser.currentProject) {
+      if (context && context.currentUser && context.currentUser.currentProject && currentModel) {
+        
         const docs = await retrieveFromDocs(context.currentUser.name, context.currentUser.currentProject, input)
-        input = `
+        const language = await detectLanguage(docs, currentModel)
+        console.log(language)
+        if ((language as string).toLowerCase().includes("french")) {
+          input = `
+            En se basant sur le contexte suivant :
+            
+            ${docs}
 
-          Based on the following context:
-          
-          
-          ${docs}
-          
-          
-          Answer the following query:
+            Réponds à la question suivante :
 
-          ${input}
-          
-          
-        `
+            ${input}
+
+            en utilisant le langage détecté ici :
+
+            ${language}
+          `
+        }
+        else {
+          input = `
+
+            Based on the following context:
+            
+            
+            ${docs}
+            
+            
+            Answer the following query:
+
+            ${input}
+
+            by using the language detected here:
+
+            ${language}
+            
+            
+          `
+        }
       console.log(input)
       } else {
         toast("error")
@@ -207,6 +263,7 @@ export default function OllamaChatBot() {
       <AppBar position="relative" color="transparent" variant="outlined">
         <Toolbar>
           {models && currentModel && (
+            <>
             <FormControl sx={{ width: '10vw' }} margin="normal">
               <InputLabel sx={{ margin: '-5pt' }} shrink={true}>
                 LLM Model chosen
@@ -226,6 +283,27 @@ export default function OllamaChatBot() {
                 ))}
               </Select>
             </FormControl>
+            <Divider orientation='vertical'></Divider>
+            <FormControl sx={{ width: '10vw' }} margin="normal">
+              <InputLabel sx={{ margin: '-5pt' }} shrink={true}>
+                LLM Embedding Model chosen
+              </InputLabel>
+              <Select
+                notched={true}
+                color="secondary"
+                type="text"
+                value={currentEmbeddingModel}
+                variant="outlined"
+                onChange={(e) => setCurrentEmbeddingModel(e.target.value)}
+              >
+                {embeddingModels.map((m, i) => (
+                  <MenuItem key={i} value={m}>
+                    {m}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            </>
           )}
         </Toolbar>
       </AppBar>
@@ -313,7 +391,7 @@ export default function OllamaChatBot() {
         <CardActions>
           <Stack spacing={2} width={'100%'}>
             <Button variant="outlined" onClick={generate} disabled={waiting}>
-              {waiting ? <CircularProgress /> : <Send/>}
+              {(waiting||waitingSummary) ? <CircularProgress /> : <Send/>}
             </Button>
           </Stack>
         </CardActions>
@@ -322,8 +400,8 @@ export default function OllamaChatBot() {
       <Grid item xs={5}>
         <Card sx={{overflow: "auto", height: "74vh"}}> 
           <CardContent>
-            {waiting && <CircularProgress/>}
-      <FileUpload getDocuments={getDocuments}/>
+            {(waiting||waitingSummary) && <CircularProgress/>}
+      <FileUpload getDocuments={getDocuments} summarizeDocs={summarizeDocuments}/>
       </CardContent>
       </Card>
       </Grid>
