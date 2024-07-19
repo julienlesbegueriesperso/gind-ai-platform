@@ -2,8 +2,9 @@ import  mongoose, { Schema, model } from  "mongoose";
 
 
 export interface MessageDocument {
-  type: "assistant"|"human" | "system"
-  content:string
+  role: string;
+  content: string;
+  images?: Uint8Array[] | string[];
 }
 
 export interface ChannelDocument {
@@ -20,8 +21,9 @@ export interface ProjectDocument {
   currentLLMModel?:string;
 }
 const MessageSchema = new Schema<MessageDocument>({
-  type: {type: String},
-  content: {type: String}
+  role: {type: String},
+  content: {type: String},
+  images: {type:[String], required:false}
 })
 const ChannelSchema = new Schema<ChannelDocument>({
   name: {

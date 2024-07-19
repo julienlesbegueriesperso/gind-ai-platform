@@ -35,8 +35,10 @@ import { Message } from 'ollama';
 import {
 
   FileUpload,
+  getProject,
   GindIAContext,
   Message as MessageDB,
+  updateProject,
 } from '@gind-ia-platform/generic-components';
 import { readStreamableValue } from 'ai/rsc';
 
@@ -82,11 +84,48 @@ export default function OllamaChatBot() {
 
   const [isRag, setIsRag] = useState(false)
 
+  const context = useContext(GindIAContext)
+
   const updateCurrentModel = (e:SelectChangeEvent<string>) => {
     setCurrentModel(e.target.value);
   };
 
-  const context = useContext(GindIAContext)
+  useEffect(() => {
+    if (context && context.currentUser && context.currentUser.currentProject) {
+    getProject(context.currentUser.currentProject).then(project => {
+      const channel = project.channels.find(c => c.name === "chat")
+      if (channel) {
+        setMessages(messages)
+      }
+    })
+    
+    }
+  }, [context])
+  
+  const updateProjectMessagesAndCurrentModel = async (messages:Message[]) => {
+    setMessages(messages)
+    if (context && context.currentUser && context.currentUser.currentProject) {
+      const project = await getProject(context.currentUser.currentProject)
+      project.currentLLMModel = currentModel
+      if (!project.channels) {
+        project.channels = []
+      }
+      const channel = project.channels.find(c => c.name === "chat")
+      if (!channel) {
+        project.channels.push({
+          name: "chat",
+          messages: messages
+        })
+      } else {
+        channel.messages = messages
+      }
+      await updateProject(project)
+    }
+  }
+
+  
+
+  
 
   const getDocuments = async (docs:Document[]) => {
     toast.info("Number of docs to index " + docs.length)
@@ -128,7 +167,7 @@ export default function OllamaChatBot() {
         console.log("index", res)
         if (!res.startsWith("error")) {
           if (context && context.currentUser && context.currentUser.currentProject) {
-            setMessages([...messages, {role: "assistant", content: res}])
+            updateProjectMessagesAndCurrentModel([...messages, {role: "assistant", content: res}])
           }
         } else {
           toast.error("error")
@@ -254,7 +293,7 @@ export default function OllamaChatBot() {
       // setResult(textContent);
     }
     setWaiting(false);
-    setMessages([...messages, humanMessage, {...newAIMessage}]);
+    updateProjectMessagesAndCurrentModel([...messages, humanMessage, {...newAIMessage}]);
     setCurrentMessage(undefined)
   }, [currentModel, messages, systemPrompt, textInput]);
 
@@ -316,7 +355,7 @@ export default function OllamaChatBot() {
               <SmartToy />
             </Avatar>
           }
-          action={<Button onClick={() => setMessages([])} startIcon={<Delete/>}>Clear all</Button>}
+          action={<Button onClick={() => updateProjectMessagesAndCurrentModel([])} startIcon={<Delete/>}>Clear all</Button>}
           title="Assistant"
         >
         </CardHeader>
@@ -333,11 +372,11 @@ export default function OllamaChatBot() {
               placeholder="Enter your system prompt"
             ></TextField>
             <div style={{overflow:"auto", height:"35vh"}}>
-            {messages.map((m, i, a) => (
+            {messages.map((m, i:number, a) => (
               <Box key={i + ''}>
                 {m.role === 'user' && <Face />}
                 {m.role === 'assistant' && <SmartToy />}
-                <Button onClick={() => setMessages([...messages.filter((m,j) => j!==i )]) }><Delete color='error'></Delete></Button>
+                <Button onClick={() => updateProjectMessagesAndCurrentModel([...messages.filter((m,j) => j!==i )]) }><Delete color='error'></Delete></Button>
                 <TextareaAutosize
                   key={i + ''}
                   ref={textRef}
